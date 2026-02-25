@@ -1,0 +1,78 @@
+{
+    "categories": [
+        {
+            "id": "movies",
+            "title": "Movies",
+            "items": [
+                {
+                    "type": "video",
+                    "url": "/content/SnapInsta.to_AQM_zPUIBIsj_08JSxAU2kacpt6zlCj5kqm4dDaHP4wvkjHnZKA-JDEVAIi2yn8PQvC9LapQVN1kJTUYNvqdAQJfTd9Kwe9764KIcR8.mp4",
+                    "title": "The Dawn"
+                },
+                {
+                    "type": "video",
+                    "url": "/content/SnapInsta.to_AQO8zAcgo7VW11DrmEHr7hPuSspOBScVyLMEDPwKZoj0CYFkiyKqgAqbrlbdLKars65BnpPmu9YSFylNnRg7LXU59mZqrJrk4JjGwW0.mp4",
+                    "title": "Cinematic Drone"
+                }
+            ]
+        },
+        {
+            "id": "photos",
+            "title": "Photos",
+            "items": [
+                {
+                    "type": "image",
+                    "url": "/content/SnapInsta.to_509171018_18513012610023766_8004533567433662373_n.jpg",
+                    "title": "Editorial Shoot 1"
+                },
+                {
+                    "type": "image",
+                    "url": "/content/SnapInsta.to_509672177_18513012628023766_3052899721291423535_n.jpg",
+                    "title": "Street Capture"
+                },
+                {
+                    "type": "image",
+                    "url": "/content/SnapInsta.to_510467903_18513012619023766_692397245612048866_n.jpg",
+                    "title": "Abstract Lines"
+                }
+            ]
+        },
+        {
+            "id": "videos",
+            "title": "Videos",
+            "items": [
+                {
+                    "type": "video",
+                    "url": "/content/SnapInsta.to_AQOB7PWo-agS0xjxh-Y_ZFy7js1Y3CXUr-HPe_wD38Zc4lrkEhB6XcJlLRAwrlQPWJXc-On1q9xM9JCuUncjZWZ7ANxJRq-N8G5mOXw.mp4",
+                    "title": "High Octane"
+                },
+                {
+                    "type": "video",
+                    "url": "/content/SnapInsta.to_AQOmJHnkeKGOKHzSC-aMLDIF2LnduJu5bR6Tn6woQiuq67PYd0FWhGRq_cyaoEMkJODiDRnsdG6ruVoUYxa77ERIeWxqIio0ZnqCOik.mp4",
+                    "title": "Visual Poetry"
+                }
+            ]
+        },
+        {
+            "id": "events",
+            "title": "Events",
+            "items": [
+                {
+                    "type": "video",
+                    "url": "/content/SnapInsta.to_AQOu2n3tcuaBus1UZsMeBhKMoZhVOPhXNSfp_3-biQ_4JXgNXEDEKiq6oi7whbjGJwc0Y9BFXwqR3POPZ-bZd9QY9qlsFDkLUnGig0c.mp4",
+                    "title": "Concert 2026"
+                },
+                {
+                    "type": "image",
+                    "url": "/content/SnapInsta.to_540220226_18499878019067658_8227351228374282959_n.jpg",
+                    "title": "Festival Night"
+                },
+                {
+                    "type": "image",
+                    "url": "/content/SnapInsta.to_541510464_18499877989067658_4852121543914659492_n.jpg",
+                    "title": "VIP Audience"
+                }
+            ]
+        }
+    ]
+}

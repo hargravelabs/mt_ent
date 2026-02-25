@@ -1,0 +1,303 @@
+/* =========================================
+   WORKS: DARK ARCHIVE (VEo3.1 / NANO BANAO STYLE)
+========================================= */
+.works-page-dark {
+    min-height: 100vh;
+    background-color: var(--bg-dark);
+    /* Deep cinematic charcoal */
+    color: var(--text-light);
+    /* Cream alabaster */
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* --- Typography / Header --- */
+.works-header-nav {
+    position: absolute;
+    top: 3rem;
+    left: 4rem;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    width: calc(100% - 8rem);
+    align-items: center;
+}
+
+.works-brand {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.works-tagline {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.4;
+    letter-spacing: 0.15em;
+}
+
+.works-main-content {
+    padding: 12rem 4rem 5rem 4rem;
+    max-width: 1800px;
+    margin: 0 auto;
+}
+
+/* --- Hero Intro --- */
+.works-hero-intro {
+    margin-bottom: 8rem;
+    padding-left: 2rem;
+}
+
+.giant-title {
+    font-size: clamp(4rem, 8vw, 9rem);
+    line-height: 0.9;
+    color: var(--bg-light);
+    margin-bottom: 2rem;
+    white-space: nowrap;
+}
+
+.giant-title .playfair.italic {
+    font-family: 'Playfair Display', serif;
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: -0.02em;
+}
+
+.giant-title .sans-bold {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+}
+
+.giant-title .indent {
+    margin-left: 15vw;
+}
+
+.works-hero-desc {
+    max-width: 450px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 1.15rem;
+    line-height: 1.6;
+    color: rgba(249, 248, 246, 0.6);
+    margin-left: auto;
+    margin-right: 15vw;
+}
+
+/* --- Navigation & Filters --- */
+.editorial-filter-nav {
+    display: flex;
+    justify-content: flex-end;
+    gap: 3rem;
+    margin-bottom: 4rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 2rem;
+}
+
+.editorial-filter-nav button {
+    background: none;
+    border: none;
+    color: var(--bg-light);
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    opacity: 0.3;
+    transition: opacity 0.3s ease, letter-spacing 0.3s ease;
+    text-transform: uppercase;
+    padding: 0;
+}
+
+.editorial-filter-nav button:hover,
+.editorial-filter-nav button.active {
+    opacity: 1;
+    letter-spacing: 0.15em;
+}
+
+.loading-void-dark {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 2rem;
+    opacity: 0.5;
+    text-align: center;
+    margin-top: 10vh;
+}
+
+/* --- Custom Cinematic Grid --- */
+/* Replacing masonry with explicit asymmetrical grid spanning */
+.premium-gallery {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-flow: dense;
+    gap: 2rem;
+    align-items: center;
+}
+
+.gallery-card {
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #111;
+    /* Add default aspect ratio here to prevent 0-height rendering */
+    aspect-ratio: 16/9;
+    grid-column: span 6;
+    opacity: 0;
+    /* JS Animation handles reveal */
+}
+
+/* Dynamic Mathematical Spans */
+.gallery-card.card-standard {
+    grid-column: span 4;
+    aspect-ratio: 4/5;
+}
+
+.gallery-card.card-wide {
+    grid-column: span 8;
+    aspect-ratio: 21/9;
+}
+
+.gallery-card.card-tall {
+    grid-column: span 4;
+    aspect-ratio: 9/16;
+}
+
+.gallery-card.card-huge {
+    grid-column: span 12;
+    aspect-ratio: 16/7;
+}
+
+@media (max-width: 1024px) {
+
+    .gallery-card.card-standard,
+    .gallery-card.card-tall {
+        grid-column: span 6;
+    }
+
+    .gallery-card.card-wide,
+    .gallery-card.card-huge {
+        grid-column: span 12;
+    }
+}
+
+@media (max-width: 768px) {
+    .premium-gallery {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .gallery-card {
+        aspect-ratio: 16/9;
+    }
+}
+
+/* Media Shelling */
+.card-media-shell {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-visual {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.02);
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s ease;
+    filter: grayscale(80%) contrast(1.1) brightness(0.6);
+}
+
+.gallery-card:hover .card-visual {
+    transform: scale(1.08);
+    filter: grayscale(0%) contrast(1) brightness(1);
+}
+
+.card-visual-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to top, rgba(5, 5, 5, 0.9) 0%, rgba(5, 5, 5, 0) 50%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.gallery-card:hover .card-visual-overlay {
+    opacity: 1;
+}
+
+/* Typography Inside Display Cases */
+.card-typography {
+    position: absolute;
+    bottom: 2rem;
+    left: 2rem;
+    right: 2rem;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.card-meta {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    margin-bottom: 0.5rem;
+}
+
+.card-headline {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 2.5rem;
+    color: #fff;
+    opacity: 0.5;
+    transform: translateY(15px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    line-height: 1.1;
+}
+
+.gallery-card:hover .card-meta {
+    opacity: 0.8;
+    transform: translateY(0);
+}
+
+.gallery-card:hover .card-headline {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- Custom Cursor Overrides specifically for Works --- */
+.showreel-container {
+    cursor: none;
+    /* Triggers the custom PLAY REEL glass cursor */
+}
+
+/* --- Footer --- */
+.works-footer-dark {
+    padding: 5rem 4rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.footer-line {
+    width: 1px;
+    height: 50px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
