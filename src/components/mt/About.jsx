@@ -46,17 +46,17 @@ const About = () => {
                     </motion.h2>
 
                     <motion.div variants={itemVariants} className="max-w-xl text-mt-gray font-sans text-lg md:text-xl font-light leading-relaxed">
-                        At MT Media, precision meets art. Based on a foundation of professional aesthetic and relentless creativity, we specialize in high-end cinematography, dynamic video editing, and modern digital experiences that define brands.
+                        At MT Media, precision meets art. Based on a foundation of professional aesthetic and relentless creativity, we specialize in high-end videography, dynamic video editing, and modern digital experiences that define brands.
                     </motion.div>
 
                     <motion.div
                         variants={itemVariants}
                         className="border-t border-mt-gray/30 pt-10 mt-6 flex flex-wrap gap-8 font-sans text-xs tracking-widest uppercase text-mt-white/80"
                     >
-                        <span>Art Direction</span>
+                        <span>Photography</span>
+                        <span>Videography</span>
                         <span>Cinematography</span>
-                        <span>Post/Fx</span>
-                        <span>Motion Graphics</span>
+                        <span>Event Media</span>
                     </motion.div>
                 </div>
             </motion.div>

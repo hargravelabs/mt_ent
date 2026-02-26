@@ -241,7 +241,7 @@ function Home() {
                 </h1>
 
                 <div className="sub-text-wrapper">
-                  <p className="micro-sans">MELBOURNE BASED // CINEMATOGRAPHY &amp; EDITING</p>
+                  <p className="micro-sans">MELBOURNE BASED // VIDEOGRAPHY &amp; EDITING</p>
                 </div>
 
                 <div className="cta-group" id="cta-group">
@@ -278,7 +278,7 @@ function Home() {
                   <video src="/content/SnapInsta.to_AQM_zPUIBIsj_08JSxAU2kacpt6zlCj5kqm4dDaHP4wvkjHnZKA-JDEVAIi2yn8PQvC9LapQVN1kJTUYNvqdAQJfTd9Kwe9764KIcR8.mp4" autoPlay loop muted playsInline style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
                 <div className="card-info">
-                  <p className="card-role">Cinematography &amp; Editing</p>
+                  <p className="card-role">Videography &amp; Editing</p>
                   <h2>M&amp;M Feature</h2>
                 </div>
               </div>
