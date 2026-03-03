@@ -428,27 +428,38 @@ html.lenis body {
 
 .scroll-wrapper {
   display: flex;
-  width: 400vw;
+  width: max-content;
   height: 100vh;
   align-items: center;
+  gap: 4vw;
+  padding: 0 5vw;
 }
 
 .scroll-card {
-  width: 100vw;
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4rem 10vw;
   position: relative;
+  flex-shrink: 0;
 }
 
 .card-inner {
-  width: 100%;
-  height: 80vh;
   position: relative;
   overflow: hidden;
   box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
+}
+
+.card-inner.landscape {
+  height: 80vh;
+  aspect-ratio: 16 / 9;
+  max-width: 85vw;
+}
+
+.card-inner.portrait {
+  height: 80vh;
+  aspect-ratio: 4 / 5;
+  max-width: 85vw;
 }
 
 .card-media {
@@ -460,17 +471,23 @@ html.lenis body {
   /* Instead of pure transition, we use GSAP parallax, but keep object-fit */
 }
 
-.card-media img,
-.card-media video {
-  width: 100%;
-  height: 130%;
-  /* extra height for parallax */
+.card-media .parallax-media {
+  width: 130%;
+  height: 100%;
   object-fit: cover;
   position: absolute;
-  top: -15%;
+  top: 0;
+  left: -15%;
   transform-origin: center;
   filter: brightness(0.7) contrast(1.1);
   transition: filter 0.5s ease;
+}
+
+.card-media img.collage-image {
+  position: relative;
+  width: auto;
+  flex: 1;
+  min-width: 0;
 }
 
 .scroll-card:hover .card-media img {
@@ -517,14 +534,6 @@ html.lenis body {
   color: #fff;
   letter-spacing: -0.02em;
   line-height: 1.1;
-  transform: translateY(20px);
-  opacity: 0;
-  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
-}
-
-.scroll-card.is-active .card-info h2 {
-  transform: translateY(0);
-  opacity: 1;
 }
 
 .cta-inner {
