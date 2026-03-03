@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Camera, MapPin, Film, Eye } from 'lucide-react';
 import gsap from 'gsap';
 import MagneticButton from './MagneticButton';
+import mtLogo from '../assets/MT_white.png';
 
 const Hero = () => {
     const containerRef = useRef(null);
@@ -42,10 +43,10 @@ const Hero = () => {
                 .to('.light-beam', { opacity: 0.02, mixBlendMode: 'normal', duration: 1 }, "-=1");
 
             // Typography Stagger
-            tl.to('.header', { opacity: 1, y: 0, duration: 1.4, ease: "expo.out" }, "wipeStart+=0.3")
-                .to('.float-word', { opacity: 1, y: '0%', stagger: 0.06, duration: 1.4, ease: "expo.out" }, "wipeStart+=0.4")
-                .to('.bio-grid', { opacity: 1, y: 0, duration: 1.4, ease: "expo.out" }, "wipeStart+=0.6")
-                .to('.cta-group', { opacity: 1, y: 0, duration: 1.4, ease: "expo.out" }, "wipeStart+=0.7");
+            tl.to('.header', { opacity: 1, y: 0, duration: 1.4, ease: "expo.out" }, "wipeStart+=0.8")
+                .to('.float-word', { opacity: 1, y: '0%', stagger: 0.06, duration: 1.4, ease: "expo.out" }, "wipeStart+=0.9")
+                .to('.bio-grid', { opacity: 1, y: 0, duration: 1.4, ease: "expo.out" }, "wipeStart+=1.1")
+                .to('.cta-group', { opacity: 1, y: 0, duration: 1.4, ease: "expo.out" }, "wipeStart+=1.2");
 
             // 4. Parallax Hero Background Interactions
             const handleMouseMove = (e) => {
@@ -108,8 +109,20 @@ const Hero = () => {
 
                 <main className="hero-container">
                     <header className="header">
-                        <div className="logo">
-                            <span className="logo-text">mt_ent_</span>
+                        <div className="logo" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <div style={{
+                                width: '40px',
+                                height: '40px',
+                                borderRadius: '50%',
+                                backgroundColor: '#111', // Dark background for contrast with white logo
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                overflow: 'hidden'
+                            }}>
+                                <img src={mtLogo} alt="MT Entertainment" style={{ height: '70%', width: 'auto' }} />
+                            </div>
+                            <span className="logo-text">MT Entertainment</span>
                         </div>
                         <nav className="nav-links">
                             <a href="#portfolio" className="nav-link">The Reel</a>
