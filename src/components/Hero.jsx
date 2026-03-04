@@ -21,18 +21,32 @@ const Hero = () => {
 
             // Realistic LED flicker
             const flickerTl = gsap.timeline();
-            flickerTl.to('.left .diffuser-screen', { fill: '#ffffff', duration: 0.03 })
-                .to('.left .diffuser-screen', { fill: '#0a0a0a', duration: 0.05 })
-                .to('.left .diffuser-screen', { fill: '#ffffff', duration: 0.04 })
-                .to('.left .diffuser-screen', { fill: '#0a0a0a', duration: 0.08 })
-                .to('.left .diffuser-screen', { fill: '#ffffff', duration: 0.1 });
 
-            flickerTl.to('.right .diffuser-screen', { fill: '#ffffff', duration: 0.04 }, 0.06)
-                .to('.right .diffuser-screen', { fill: '#0a0a0a', duration: 0.06 }, ">")
-                .to('.right .diffuser-screen', { fill: '#ffffff', duration: 0.1 }, "+=0.03");
+            // Left light flicker - diffuser and beam in sync
+            flickerTl.to('.left .diffuser-screen', { fill: '#ffffff', duration: 0.04 }, 0)
+                .to('.left .light-beam', { opacity: 0.4, duration: 0.04 }, 0)
+                .to('.left .diffuser-screen', { fill: '#0a0a0a', duration: 0.08 }, ">")
+                .to('.left .light-beam', { opacity: 0, duration: 0.08 }, "<")
+                .to('.left .diffuser-screen', { fill: '#ffffff', duration: 0.05 }, ">")
+                .to('.left .light-beam', { opacity: 0.5, duration: 0.05 }, "<")
+                .to('.left .diffuser-screen', { fill: '#0a0a0a', duration: 0.12 }, ">")
+                .to('.left .light-beam', { opacity: 0, duration: 0.12 }, "<")
+                .to('.left .diffuser-screen', { fill: '#ffffff', duration: 0.1 }, ">")
+                .to('.left .light-beam', { opacity: 0.5, duration: 0.1 }, "<");
+
+            // Right light flicker - slightly offset for realism
+            flickerTl.to('.right .diffuser-screen', { fill: '#ffffff', duration: 0.05 }, 0.08)
+                .to('.right .light-beam', { opacity: 0.5, duration: 0.05 }, 0.08)
+                .to('.right .diffuser-screen', { fill: '#0a0a0a', duration: 0.1 }, ">")
+                .to('.right .light-beam', { opacity: 0, duration: 0.1 }, "<")
+                .to('.right .diffuser-screen', { fill: '#ffffff', duration: 0.06 }, "+=0.05")
+                .to('.right .light-beam', { opacity: 0.6, duration: 0.06 }, "<")
+                .to('.right .diffuser-screen', { fill: '#0a0a0a', duration: 0.15 }, ">")
+                .to('.right .light-beam', { opacity: 0, duration: 0.15 }, "<")
+                .to('.right .diffuser-screen', { fill: '#ffffff', duration: 0.12 }, "+=0.05")
+                .to('.right .light-beam', { opacity: 0.5, duration: 0.12 }, "<");
 
             tl.add(flickerTl, "+=0.1");
-            tl.to('.light-beam', { opacity: 0.5, duration: 0.3, ease: "power2.out" }, "-=0.1");
 
             // The Reveal Wipe
             tl.addLabel("wipeStart", "-=0.2");
