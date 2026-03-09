@@ -18,6 +18,8 @@ const useSmoothScroll = () => {
             smoothTouch: false,
         });
 
+        window.lenis = lenis;
+
         lenis.on('scroll', ScrollTrigger.update);
 
         const raf = (time) => {
@@ -30,6 +32,7 @@ const useSmoothScroll = () => {
         return () => {
             gsap.ticker.remove(raf);
             lenis.destroy();
+            delete window.lenis;
         };
     }, []);
 };

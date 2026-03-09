@@ -75,7 +75,7 @@ html.lenis body {
   width: 100%;
   height: 100%;
   background: var(--bg-darker);
-  z-index: 0;
+  z-index: 2;
 }
 
 .light-theme-bg {
@@ -582,6 +582,8 @@ html.lenis body {
   flex-direction: column;
   justify-content: center;
   padding: 10vh 4vw;
+  margin-bottom: 100vh;
+  /* Scroll gap to expose reveal-footer underneath */
 }
 
 .services-header {
@@ -589,21 +591,41 @@ html.lenis body {
   padding-left: 2vw;
 }
 
-.services-header p {
+.services-label {
   font-family: 'Inter', sans-serif;
   font-size: 0.8rem;
   text-transform: uppercase;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.25em;
   color: var(--accent);
-  margin-bottom: 1rem;
+  margin-bottom: 2.5rem;
+  opacity: 0;
 }
 
-.services-header h3 {
+.services-statement {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(2rem, 3vw, 3rem);
-  font-style: italic;
+  font-size: clamp(2.5rem, 4.5vw, 5.5rem);
   font-weight: 300;
+  line-height: 1.25;
   color: var(--text-light);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 0.3em 0.25em;
+  letter-spacing: -0.01em;
+}
+
+.services-statement .word {
+  display: inline-block;
+  will-change: transform, opacity, filter;
+  opacity: 0;
+  transform: translateY(30px);
+  filter: blur(12px);
+}
+
+.services-statement i {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
 }
 
 .services-container.bento-layout {
@@ -705,29 +727,35 @@ html.lenis body {
   z-index: 10;
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
   gap: 0.5rem;
+  margin-top: auto;
+}
+
+.modern-card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.5rem, 4vw, 4.5rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text-light);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 .modern-card-num {
   font-family: 'Inter', sans-serif;
-  font-size: 0.7rem;
+  font-size: clamp(1rem, 1.5vw, 1.5rem);
   font-weight: 500;
-  color: var(--accent);
-  opacity: 0.9;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-}
-
-.modern-card-title {
-  font-family: 'Inter', sans-serif;
-  /* Ditching Serif for modern high-tech feel */
-  font-size: clamp(2rem, 3vw, 3.5rem);
-  font-weight: 400;
   font-style: normal;
-  color: var(--text-light);
-  line-height: 1.1;
-  letter-spacing: -0.04em;
-  /* Tight tracking */
+  color: var(--accent);
+  letter-spacing: 0.15em;
+  opacity: 0.9;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  position: relative;
+  z-index: 10;
+  align-self: flex-start;
 }
 
 /* Specific styling for the massive hero card footer */
@@ -744,7 +772,7 @@ html.lenis body {
    4. CONTACT REVEAL FOOTER
 ========================================= */
 .footer-spacer {
-  height: 80vh;
+  height: 100vh;
 }
 
 .reveal-footer {
@@ -752,17 +780,46 @@ html.lenis body {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 80vh;
+  height: 100vh;
   background: var(--text-dark);
   color: var(--text-light);
   z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 5rem 4vw;
+  padding: 10rem 4vw 5rem;
+  overflow: hidden;
+}
+
+.footer-marquee {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100vw;
+  transform: translateY(-50%);
+  display: flex;
+  white-space: nowrap;
+  overflow: hidden;
+  z-index: 0;
+  opacity: 0.04;
+  pointer-events: none;
+}
+
+.footer-noise {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.04"/%3E%3C/svg%3E');
+  mix-blend-mode: overlay;
+  z-index: 1;
+  pointer-events: none;
 }
 
 .footer-content {
+  position: relative;
+  z-index: 5;
   width: 100%;
   max-width: 1400px;
   display: flex;
@@ -774,6 +831,7 @@ html.lenis body {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  gap: 3rem;
 }
 
 .footer-headline {
@@ -819,6 +877,20 @@ html.lenis body {
 
 .footer-col a.email-link:hover {
   border-color: var(--accent);
+}
+
+.footer-col a.phone-link {
+  display: block;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 300;
+  margin-top: 1rem;
+  transition: color 0.3s;
+}
+
+.footer-col a.phone-link:hover {
+  color: var(--text-light);
 }
 
 .footer-link {
@@ -924,6 +996,15 @@ html.lenis body {
   .footer-top {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .services-section {
+    margin-bottom: 100vh;
+  }
+
+  .connect-btn-group {
+    flex-direction: column;
+    width: 100%;
   }
 }
 

@@ -12,17 +12,17 @@ const AboutMT = () => {
         const ctx = gsap.context(() => {
             const words = gsap.utils.toArray('.about-statement .word');
 
-            // Animation triggers once when the section enters the viewport
-            const tl = gsap.timeline({
+            // 1. Main Statement Animation
+            const statementTl = gsap.timeline({
                 scrollTrigger: {
-                    trigger: sectionRef.current,
-                    start: "top 70%", // Triggers when the top of the section is 70% down the viewport
-                    toggleActions: "play none none none" // Plays once, doesn't reverse or scrub
+                    trigger: '.about-content',
+                    start: "top 75%",
+                    toggleActions: "play none none none"
                 }
             });
 
             // Reveal label
-            tl.to('.about-label', {
+            statementTl.to('.about-label', {
                 opacity: 1,
                 y: -10,
                 duration: 0.5,
@@ -30,7 +30,7 @@ const AboutMT = () => {
             }, 0);
 
             // Expand background glow
-            tl.to('.about-glow', {
+            statementTl.to('.about-glow', {
                 scale: 1.5,
                 opacity: 1,
                 duration: 2,
@@ -38,7 +38,7 @@ const AboutMT = () => {
             }, 0);
 
             // Stagger reveal of the main statement words with a cool blur unfocus effect
-            tl.to(words, {
+            statementTl.to(words, {
                 opacity: 1,
                 y: 0,
                 filter: "blur(0px)",
@@ -47,21 +47,28 @@ const AboutMT = () => {
                 ease: "power3.out"
             }, 0.2);
 
-            // Reveal details at the end
-            tl.to('.about-details', {
+            // 2. Details & SEO Text Animation (Triggered together)
+            const detailsTl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: '.about-details',
+                    start: "top 85%",
+                    toggleActions: "play none none none"
+                }
+            });
+
+            detailsTl.to('.about-details', {
                 opacity: 1,
                 y: -10,
                 duration: 1,
                 ease: "power2.out"
-            }, "+=0.2");
+            }, 0);
 
-            // Reveal SEO text block
-            tl.to('.about-seo-text', {
+            detailsTl.to('.about-seo-text', {
                 opacity: 1,
                 y: 0,
                 duration: 1,
                 ease: "power2.out"
-            }, "-=0.5");
+            }, 0);
 
         }, sectionRef);
 

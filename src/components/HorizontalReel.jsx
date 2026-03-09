@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import MagneticButton from './MagneticButton';
 import { client } from '../sanityClient';
+import MediaLoader from './MediaLoader';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -140,30 +141,33 @@ const HorizontalReel = () => {
                     return (
                         <div className="scroll-card" key={project._id}>
                             <div className={`card-inner ${orientationClass}`}>
-                                <div className="card-media" style={{ display: 'flex', flexDirection: 'row', gap: '5px', width: '100%', height: '100%' }}>
+                                <div className="card-media">
                                     {project.mediaType === 'image_collage' && project.imageCollageUrls && project.imageCollageUrls.length > 0 ? (
-                                        project.imageCollageUrls.map((url, i) => (
-                                            <img
-                                                key={i}
-                                                src={url}
-                                                alt={`${project.title} - part ${i + 1}`}
-                                                className="collage-image"
-                                            />
-                                        ))
+                                        <div style={{ display: 'flex', flexDirection: 'row', gap: '1px', width: '100%', height: '100%' }}>
+                                            {project.imageCollageUrls.map((url, i) => (
+                                                <MediaLoader
+                                                    key={i}
+                                                    src={url}
+                                                    type="image"
+                                                    alt={`${project.title} - part ${i + 1}`}
+                                                    className="collage-mode"
+                                                    mediaClass="collage-image"
+                                                />
+                                            ))}
+                                        </div>
                                     ) : project.mediaType === 'image' && project.imageUrl ? (
-                                        <img
+                                        <MediaLoader
                                             src={project.imageUrl}
+                                            type="image"
                                             alt={project.title}
-                                            className="parallax-media"
+                                            mediaClass="parallax-media"
                                         />
                                     ) : project.mediaType === 'video' && project.videoUrl ? (
-                                        <video
+                                        <MediaLoader
                                             ref={el => videoRefs.current[index] = el}
                                             src={project.videoUrl}
-                                            loop
-                                            muted
-                                            playsInline
-                                            className="parallax-media"
+                                            type="video"
+                                            mediaClass="parallax-media"
                                         />
                                     ) : null}
                                     <div className="card-overlay"></div>

@@ -4,7 +4,6 @@ import Hero from './Hero';
 import AboutMT from './AboutMT';
 import HorizontalReel from './HorizontalReel';
 import Services from './Services';
-import LetsConnect from './LetsConnect';
 
 const Home = () => {
     useSmoothScroll();
@@ -15,7 +14,6 @@ const Home = () => {
             <AboutMT />
             <HorizontalReel />
             <Services />
-            <LetsConnect />
         </div>
     );
 };

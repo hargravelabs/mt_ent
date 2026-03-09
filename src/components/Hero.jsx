@@ -7,6 +7,30 @@ import mtLogo from '../assets/MT_white.png';
 const Hero = () => {
     const containerRef = useRef(null);
 
+    const handleNavClick = (e, targetId) => {
+        e.preventDefault();
+
+        if (targetId === '#contact') {
+            // The footer is position: fixed underneath the main content reveal.
+            // We just need to scroll to the absolute bottom of the document.
+            if (window.lenis) {
+                window.lenis.scrollTo(document.body.scrollHeight, { duration: 3.5 });
+            } else {
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            }
+            return;
+        }
+
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+            if (window.lenis) {
+                window.lenis.scrollTo(targetElement, { offset: 0, duration: 2 });
+            } else {
+                targetElement.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    };
+
     useEffect(() => {
         // 2. Hero "Lights On" Cinematic Intro Animation
         const ctx = gsap.context(() => {
@@ -23,14 +47,16 @@ const Hero = () => {
                 gsap.set('.right .diffuser-screen', { fill: '#ffffff' });
                 gsap.set('.right .light-beam', { opacity: 0.5 });
                 gsap.set(document.querySelector('.home-content'), { backgroundColor: 'var(--bg-light)' });
-                gsap.set('.light-theme-bg', { opacity: 1 });
+                gsap.set('.light-theme-bg', { opacity: 1, position: 'absolute' });
                 gsap.set('.light-wipe', { opacity: 0, scale: 3.5 });
                 gsap.set('.light-beam', { opacity: 0.02, mixBlendMode: 'normal' });
+                gsap.set(document.querySelector('.void-bg'), { opacity: 0 });
             } else {
                 gsap.set('.header', { opacity: 0, y: 30 });
                 gsap.set('.float-word', { opacity: 0, y: '115%' });
                 gsap.set('.bio-grid', { opacity: 0, y: 30 });
                 gsap.set('.cta-group', { opacity: 0, y: 30 });
+                gsap.set(document.querySelector('.reveal-footer'), { opacity: 0 });
 
                 const tl = gsap.timeline({
                     defaults: { ease: "power3.out" },
@@ -74,7 +100,11 @@ const Hero = () => {
                     .to(document.querySelector('.home-content'), { backgroundColor: 'var(--bg-light)', duration: 0.1 }, "wipeStart+=0.3")
                     .to('.light-theme-bg', { opacity: 1, duration: 0.1 }, "wipeStart+=0.3")
                     .to('.light-wipe', { opacity: 0, duration: 1.2, ease: "power2.out" }, ">")
-                    .to('.light-beam', { opacity: 0.02, mixBlendMode: 'normal', duration: 1 }, "-=1");
+                    .to('.light-beam', { opacity: 0.02, mixBlendMode: 'normal', duration: 1 }, "-=1")
+                    // After wipe: hide void-bg, show footer, make light-theme-bg absolute so it doesn't cover footer
+                    .set(document.querySelector('.void-bg'), { opacity: 0 })
+                    .set('.light-theme-bg', { position: 'absolute' })
+                    .to(document.querySelector('.reveal-footer'), { opacity: 1, duration: 0.6, ease: 'power2.out' });
 
                 // Typography Stagger
                 tl.to('.header', { opacity: 1, y: 0, duration: 1.4, ease: "expo.out" }, "wipeStart+=0.8")
@@ -106,7 +136,7 @@ const Hero = () => {
     }, []);
 
     return (
-        <div ref={containerRef}>
+        <div ref={containerRef} style={{ position: 'relative' }}>
             <div className="light-theme-bg">
                 <div className="bg-pattern"></div>
             </div>
@@ -160,9 +190,10 @@ const Hero = () => {
                             <span className="logo-text">MT Entertainment</span>
                         </div>
                         <nav className="nav-links">
-                            <a href="#portfolio" className="nav-link">The Reel</a>
-                            <a href="#services" className="nav-link">Capabilities</a>
-                            <a href="#contact" className="nav-link">Contact</a>
+                            <a href="#about" className="nav-link" onClick={(e) => handleNavClick(e, '#about')}>About Us</a>
+                            <a href="#portfolio" className="nav-link" onClick={(e) => handleNavClick(e, '#portfolio')}>The Reel</a>
+                            <a href="#services" className="nav-link" onClick={(e) => handleNavClick(e, '#services')}>Services</a>
+                            <a href="#contact" className="nav-link" onClick={(e) => handleNavClick(e, '#contact')}>Let's create</a>
                         </nav>
                     </header>
 
@@ -181,11 +212,8 @@ const Hero = () => {
                             </div>
 
                             <div className="cta-group" id="cta-group">
-                                <MagneticButton className="cta-primary">
-                                    <span className="btn-text">View the Archive</span>
-                                </MagneticButton>
-                                <MagneticButton className="cta-secondary">
-                                    <span className="btn-text">Collaborate</span>
+                                <MagneticButton className="cta-secondary" onClick={(e) => handleNavClick(e, '#contact')}>
+                                    <span className="btn-text">Let's create</span>
                                 </MagneticButton>
                             </div>
                         </div>
