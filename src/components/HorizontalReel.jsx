@@ -66,50 +66,56 @@ const HorizontalReel = () => {
     useEffect(() => {
         if (projects.length === 0) return; // Wait until cards are rendered
 
-        const ctx = gsap.context(() => {
-            const horizontalSection = horizontalRef.current;
-            const scrollWrapper = wrapperRef.current;
+        let mm = gsap.matchMedia();
 
-            const getScrollAmount = () => -(scrollWrapper.scrollWidth - window.innerWidth);
+        mm.add("(min-width: 768px)", () => {
+            const ctx = gsap.context(() => {
+                const horizontalSection = horizontalRef.current;
+                const scrollWrapper = wrapperRef.current;
 
-            // Create scroll trigger for horizontal movement
-            const scrollTween = gsap.to(scrollWrapper, {
-                x: getScrollAmount,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: horizontalSection,
-                    pin: true,
-                    scrub: 1.5,
-                    start: "top top",
-                    end: () => `+=${scrollWrapper.scrollWidth - window.innerWidth}`,
-                    invalidateOnRefresh: true
-                }
-            });
+                const getScrollAmount = () => -(scrollWrapper.scrollWidth - window.innerWidth);
 
-            // Internal Image Parallax during horizontal scroll
-            gsap.utils.toArray('.scroll-card').forEach((card) => {
-                const media = card.querySelector('.parallax-media');
-                if (media) {
-                    gsap.fromTo(media,
-                        { xPercent: -10 },
-                        {
-                            xPercent: 10,
-                            ease: "none",
-                            scrollTrigger: {
-                                trigger: card,
-                                containerAnimation: scrollTween,
-                                start: "left right",
-                                end: "right left",
-                                scrub: true,
-                                invalidateOnRefresh: true
+                // Create scroll trigger for horizontal movement
+                const scrollTween = gsap.to(scrollWrapper, {
+                    x: getScrollAmount,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: horizontalSection,
+                        pin: true,
+                        scrub: 1.5,
+                        start: "top top",
+                        end: () => `+=${scrollWrapper.scrollWidth - window.innerWidth}`,
+                        invalidateOnRefresh: true
+                    }
+                });
+
+                // Internal Image Parallax during horizontal scroll
+                gsap.utils.toArray('.scroll-card').forEach((card) => {
+                    const media = card.querySelector('.parallax-media');
+                    if (media) {
+                        gsap.fromTo(media,
+                            { xPercent: -10 },
+                            {
+                                xPercent: 10,
+                                ease: "none",
+                                scrollTrigger: {
+                                    trigger: card,
+                                    containerAnimation: scrollTween,
+                                    start: "left right",
+                                    end: "right left",
+                                    scrub: true,
+                                    invalidateOnRefresh: true
+                                }
                             }
-                        }
-                    );
-                }
-            });
-        }, horizontalRef);
+                        );
+                    }
+                });
+            }, horizontalRef);
 
-        return () => ctx.revert();
+            return () => ctx.revert();
+        });
+
+        return () => mm.revert();
     }, [projects]); // Depend on projects so GSAP knows how many cards there are
 
     // Helper: Determine CSS class based on dimensions
@@ -126,6 +132,9 @@ const HorizontalReel = () => {
 
     return (
         <section className="horizontal-section" ref={horizontalRef} id="portfolio">
+            <div className="mobile-section-header">
+                <p>Selected Works</p>
+            </div>
             <div className="scroll-wrapper" ref={wrapperRef}>
 
                 {projects.map((project, index) => {

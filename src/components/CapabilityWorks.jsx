@@ -1,106 +1,60 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { client } from '../sanityClient';
 import MasonryGrid from './MasonryGrid';
-import CustomCursor from '../CustomCursor'; // To ensure cursor behaves properly
+import { useGalleryCache } from '../context/GalleryCacheContext';
 import './CapabilityWorks.css';
 
 const CapabilityWorks = () => {
     const { capability } = useParams();
-    const [galleryItems, setGalleryItems] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const { cache, fetchMore } = useGalleryCache();
+    const loaderRef = useRef(null);
+
+    const categoryMapping = {
+        'photography': 'Photography',
+        'videography': 'Videography',
+        'cinematography': 'Cinematography',
+        'event-media': 'Event Media'
+    };
+    const categoryName = categoryMapping[capability] || capability.replace('-', ' ');
+
+    const categoryData = cache[categoryName] || { items: [], hasMore: true };
+    const { items: galleryItems, hasMore } = categoryData;
+    const isInitialLoad = galleryItems.length === 0 && hasMore;
 
     useLayoutEffect(() => {
-        // Use a small timeout to ensure Lenis smooth scroll destroy sequence doesn't intercept the native scroll jump
         const timeoutId = setTimeout(() => {
             window.scrollTo(0, 0);
         }, 50);
         return () => clearTimeout(timeoutId);
     }, [capability]);
 
+    // Initial fetch if empty
     useEffect(() => {
-        const fetchItems = async () => {
-            setLoading(true);
-            try {
-                const categoryMapping = {
-                    'photography': 'Photography',
-                    'videography': 'Videography',
-                    'cinematography': 'Cinematography',
-                    'event-media': 'Event Media'
-                };
-                const categoryName = categoryMapping[capability] || capability.replace('-', ' ');
+        if (isInitialLoad) {
+            fetchMore(categoryName);
+        }
+    }, [categoryName, isInitialLoad, fetchMore]);
 
-                // Fetch both new gallery items and old projects to preserve existing content
-                const query = `*[(_type == "galleryItem" || _type == "project") && category == $categoryName] | order(_createdAt desc) {
-                    _type,
-                    _id,
-                    title,
-                    category,
-                    mediaType,
-                    image { asset->{url, metadata { dimensions } } },
-                    images[] { asset->{url} },
-                    galleryImages[] { asset->{url} },
-                    video { asset->{url} }
-                }`;
+    // Intersection Observer for Infinite Scroll
+    useEffect(() => {
+        const observerTarget = loaderRef.current;
+        if (!observerTarget) return;
 
-                const data = await client.fetch(query, { categoryName });
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && hasMore) {
+                    fetchMore(categoryName);
+                }
+            },
+            { rootMargin: '400px', threshold: 0.1 } // Start loading 400px before reaching the bottom
+        );
 
-                // Flatten old multi-image "projects" so each photo has its own spot in the masonry grid
-                const flattenedItems = [];
+        observer.observe(observerTarget);
 
-                data.forEach(doc => {
-                    if (doc._type === "galleryItem") {
-                        flattenedItems.push(doc);
-                    } else if (doc._type === "project") {
-                        if (doc.mediaType === 'video' && doc.video) {
-                            flattenedItems.push({
-                                _id: doc._id + '-vid',
-                                title: doc.title,
-                                mediaType: 'video',
-                                video: doc.video
-                            });
-                        }
-                        if (doc.mediaType === 'image' && doc.image) {
-                            flattenedItems.push({
-                                _id: doc._id + '-img',
-                                title: doc.title,
-                                mediaType: 'image',
-                                image: doc.image
-                            });
-                        }
-                        if (doc.mediaType === 'image_collage' && doc.images) {
-                            doc.images.forEach((img, idx) => {
-                                flattenedItems.push({
-                                    _id: doc._id + '-img-' + idx,
-                                    title: idx === 0 ? doc.title : '',
-                                    mediaType: 'image',
-                                    image: img
-                                });
-                            });
-                        }
-                        if (doc.mediaType === 'gallery' && doc.galleryImages) {
-                            doc.galleryImages.forEach((img, idx) => {
-                                flattenedItems.push({
-                                    _id: doc._id + '-gal-' + idx,
-                                    title: idx === 0 ? doc.title : '',
-                                    mediaType: 'image',
-                                    image: img
-                                });
-                            });
-                        }
-                    }
-                });
-
-                setGalleryItems(flattenedItems);
-            } catch (error) {
-                console.error("Error fetching projects:", error);
-            } finally {
-                setLoading(false);
-            }
+        return () => {
+            if (observerTarget) observer.unobserve(observerTarget);
         };
-
-        fetchItems();
-    }, [capability]);
+    }, [hasMore, fetchMore, categoryName]);
 
     return (
         <div className="capability-works-page">
@@ -113,12 +67,26 @@ const CapabilityWorks = () => {
                     {capability.replace('-', ' ')} Works
                 </h1>
 
-                {loading ? (
+                {isInitialLoad ? (
                     <div style={{ color: '#888', fontStyle: 'italic', height: '50vh', display: 'flex', alignItems: 'center' }}>Loading portfolio...</div>
-                ) : galleryItems.length > 0 ? (
-                    <MasonryGrid items={galleryItems} />
                 ) : (
-                    <div style={{ color: '#555', height: '50vh', display: 'flex', alignItems: 'center' }}>No works found for this capability.</div>
+                    <>
+                        {galleryItems.length > 0 ? (
+                            <MasonryGrid items={galleryItems} />
+                        ) : (
+                            <div style={{ color: '#555', height: '50vh', display: 'flex', alignItems: 'center' }}>No works found for this capability.</div>
+                        )}
+                        
+                        {/* Infinite Scroll Trigger */}
+                        {hasMore && galleryItems.length > 0 && (
+                            <div 
+                                ref={loaderRef} 
+                                style={{ height: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '2rem', color: '#888' }}
+                            >
+                                Loading more...
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
         </div>

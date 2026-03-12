@@ -427,6 +427,11 @@ html.lenis body {
   color: var(--text-light);
 }
 
+.mobile-section-header {
+  display: none;
+  /* Hide on desktop uniformly */
+}
+
 .scroll-wrapper {
   display: flex;
   width: max-content;
@@ -436,6 +441,58 @@ html.lenis body {
   padding: 0 5vw;
 }
 
+/* Base styles are desktop-first conceptually but applied generally. Let's make mobile overrides. */
+@media (max-width: 767px) {
+  .mobile-section-header {
+    display: block;
+    padding: 0 5vw;
+    margin-bottom: 2rem;
+  }
+
+  .mobile-section-header p {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.70rem;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    opacity: 0.8;
+  }
+
+  .horizontal-section {
+    height: auto;
+    width: 100vw;
+    /* Allow native horizontal scroll */
+    overflow-x: auto;
+    overflow-y: hidden;
+    /* Hide scrollbar for cleaner look */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+
+    /* Native scrolling with momentum */
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 0 5vw;
+    /* Match padding to center cards */
+    padding: 2rem 0 6rem 0;
+    /* Add top/bottom padding instead of locking to 100vh to fix the gap */
+  }
+
+  .horizontal-section::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scroll-wrapper {
+    /* Auto width allows the children to dictate the scroll extent natively */
+    width: auto;
+    height: auto;
+    padding: 0 5vw;
+    align-items: stretch;
+    /* Cards fill the height appropriately */
+  }
+}
+
 .scroll-card {
   height: 100vh;
   display: flex;
@@ -443,6 +500,16 @@ html.lenis body {
   justify-content: center;
   position: relative;
   flex-shrink: 0;
+}
+
+@media (max-width: 767px) {
+  .scroll-card {
+    height: auto;
+    width: 85vw;
+    /* Take up most of the screen, leaving a peek of the next card */
+    scroll-snap-align: center;
+    /* Snap to center of viewport */
+  }
 }
 
 .card-inner {
@@ -461,6 +528,22 @@ html.lenis body {
   height: 80vh;
   aspect-ratio: 4 / 5;
   max-width: 85vw;
+}
+
+@media (max-width: 767px) {
+
+  .card-inner.landscape,
+  .card-inner.portrait {
+    height: auto;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    /* Luxury editorial standard: tall portrait crop for everything */
+    max-width: 100%;
+    border-radius: 16px;
+    /* Elegant subtle rounding */
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0 20px 40px rgba(0, 0, 0, 0.5);
+    /* Refined glass ring and deep shadow */
+  }
 }
 
 .card-media {
@@ -501,7 +584,8 @@ html.lenis body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 60%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0) 50%);
+  /* Darker gradient for mobile contrast */
   pointer-events: none;
   z-index: 1;
 }
@@ -535,6 +619,27 @@ html.lenis body {
   color: #fff;
   letter-spacing: -0.02em;
   line-height: 1.1;
+}
+
+@media (max-width: 767px) {
+  .card-info {
+    padding: 8vw 6vw;
+    /* Tighter editorial padding at the bottom */
+    gap: 0.25rem;
+  }
+
+  .card-info h2 {
+    font-size: clamp(2.5rem, 8vw, 3rem);
+    /* Slightly larger, high contrast text for mobile */
+    letter-spacing: -0.01em;
+  }
+
+  .card-role {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    /* Tighter tracking for the overline */
+    opacity: 0.9;
+  }
 }
 
 .cta-inner {

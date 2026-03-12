@@ -1,10 +1,13 @@
 import { defineField, defineType } from 'sanity'
+import { orderRankField, orderRankOrdering } from '@sanity/orderable-document-list'
 
 export default defineType({
     name: 'galleryItem',
     title: 'Gallery Item',
     type: 'document',
+    orderings: [orderRankOrdering],
     fields: [
+        orderRankField({ type: 'galleryItem' }),
         defineField({
             name: 'title',
             title: 'Title / Description (Optional)',
@@ -53,6 +56,23 @@ export default defineType({
             options: {
                 accept: 'video/*',
             },
+            hidden: ({ document }) => document?.mediaType !== 'video',
+        }),
+        defineField({
+            name: 'videoThumbnail',
+            title: 'Video Thumbnail',
+            description: 'Placeholder image to display before the video is played.',
+            type: 'image',
+            options: {
+                hotspot: true,
+            },
+            validation: (Rule) => Rule.custom((value, context) => {
+                const doc = context.document as unknown as { mediaType: string };
+                if (doc.mediaType === 'video' && !value) {
+                    return 'A thumbnail is required when the media type is Video';
+                }
+                return true;
+            }),
             hidden: ({ document }) => document?.mediaType !== 'video',
         }),
     ],
