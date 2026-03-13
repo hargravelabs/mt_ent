@@ -2,6 +2,7 @@ import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import MasonryGrid from './MasonryGrid';
 import { useGalleryCache } from '../context/GalleryCacheContext';
+import Demo from './ui/demo';
 import './CapabilityWorks.css';
 
 const CapabilityWorks = () => {
@@ -71,14 +72,20 @@ const CapabilityWorks = () => {
                     <div style={{ color: '#888', fontStyle: 'italic', height: '50vh', display: 'flex', alignItems: 'center' }}>Loading portfolio...</div>
                 ) : (
                     <>
-                        {galleryItems.length > 0 ? (
-                            <MasonryGrid items={galleryItems} />
+                        {capability === 'cinematography' ? (
+                            <div style={{ margin: '0 -4vw' }}>
+                                <Demo items={galleryItems} />
+                            </div>
                         ) : (
-                            <div style={{ color: '#555', height: '50vh', display: 'flex', alignItems: 'center' }}>No works found for this capability.</div>
+                            galleryItems.length > 0 ? (
+                                <MasonryGrid items={galleryItems} />
+                            ) : (
+                                <div style={{ color: '#555', height: '50vh', display: 'flex', alignItems: 'center' }}>No works found for this capability.</div>
+                            )
                         )}
                         
                         {/* Infinite Scroll Trigger */}
-                        {hasMore && galleryItems.length > 0 && (
+                        {hasMore && galleryItems.length > 0 && capability !== 'cinematography' && (
                             <div 
                                 ref={loaderRef} 
                                 style={{ height: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '2rem', color: '#888' }}
