@@ -1,0 +1,25 @@
+{
+  "workspace_phase": 3,
+  "workspace_class": "business-user",
+  "assessed_at": "2026-03-14T17:00:18+0800",
+  "override": null,
+  "signals": {
+  "os": "darwin",
+  "is_windows": false,
+  "git_present": true,
+  "git_remote": "https://github.com/Hargrave-Labs/mt_ent.git",
+  "code_file_count": 14,
+  "doc_file_count": 1,
+  "other_file_count": 3,
+  "code_ratio": 0.78,
+  "package_managers_found": ["package.json"],
+  "build_configs_found": [],
+  "nabcel_instrumented": false,
+  "has_wsl": false,
+  "has_git_bash": false,
+  "has_backend_code": false,
+  "frontend_only": true,
+  "ai_generation_signals": 3,
+  "likely_ai_generated": true
+}
+}
