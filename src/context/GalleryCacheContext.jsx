@@ -54,6 +54,7 @@ export const GalleryCacheProvider = ({ children }) => {
                         url
                     }
                 },
+                youtubeUrl,
                 videoThumbnail {
                     asset->{
                         url,

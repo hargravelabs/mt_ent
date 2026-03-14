@@ -58,44 +58,44 @@ const CapabilityWorks = () => {
     }, [hasMore, fetchMore, categoryName]);
 
     return (
-        <div className="capability-works-page">
-            <div className="capability-works-content">
-                <Link to="/" className="back-link">
-                    &larr; Back to Studio
-                </Link>
+        <div className={`capability-works-page ${capability === 'cinematography' ? 'bg-black' : ''}`}>
+            {capability === 'cinematography' ? (
+                <div style={{ margin: '0', width: '100%' }}>
+                    <Demo items={galleryItems} />
+                </div>
+            ) : (
+                <div className="capability-works-content">
+                    <Link to="/" className="back-link">
+                        &larr; Back to Studio
+                    </Link>
 
-                <h1 className="capability-title">
-                    {capability.replace('-', ' ')} Works
-                </h1>
+                    <h1 className="capability-title">
+                        {capability.replace('-', ' ')} Works
+                    </h1>
 
-                {isInitialLoad ? (
-                    <div style={{ color: '#888', fontStyle: 'italic', height: '50vh', display: 'flex', alignItems: 'center' }}>Loading portfolio...</div>
-                ) : (
-                    <>
-                        {capability === 'cinematography' ? (
-                            <div style={{ margin: '0 -4vw' }}>
-                                <Demo items={galleryItems} />
-                            </div>
-                        ) : (
-                            galleryItems.length > 0 ? (
+                    {isInitialLoad ? (
+                        <div style={{ color: '#888', fontStyle: 'italic', height: '50vh', display: 'flex', alignItems: 'center' }}>Loading portfolio...</div>
+                    ) : (
+                        <>
+                            {galleryItems.length > 0 ? (
                                 <MasonryGrid items={galleryItems} />
                             ) : (
                                 <div style={{ color: '#555', height: '50vh', display: 'flex', alignItems: 'center' }}>No works found for this capability.</div>
-                            )
-                        )}
-                        
-                        {/* Infinite Scroll Trigger */}
-                        {hasMore && galleryItems.length > 0 && capability !== 'cinematography' && (
-                            <div 
-                                ref={loaderRef} 
-                                style={{ height: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '2rem', color: '#888' }}
-                            >
-                                Loading more...
-                            </div>
-                        )}
-                    </>
-                )}
-            </div>
+                            )}
+                            
+                            {/* Infinite Scroll Trigger */}
+                            {hasMore && galleryItems.length > 0 && (
+                                <div 
+                                    ref={loaderRef} 
+                                    style={{ height: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '2rem', color: '#888' }}
+                                >
+                                    Loading more...
+                                </div>
+                            )}
+                        </>
+                    )}
+                </div>
+            )}
         </div>
     );
 };

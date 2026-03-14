@@ -59,6 +59,13 @@ export default defineType({
             hidden: ({ document }) => document?.mediaType !== 'video',
         }),
         defineField({
+            name: 'youtubeUrl',
+            title: 'YouTube URL',
+            description: 'Provide a YouTube URL instead of uploading a video file (preferred for high-quality video).',
+            type: 'url',
+            hidden: ({ document }) => document?.mediaType !== 'video',
+        }),
+        defineField({
             name: 'videoThumbnail',
             title: 'Video Thumbnail',
             description: 'Placeholder image to display before the video is played.',
