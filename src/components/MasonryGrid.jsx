@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 import { urlFor } from '../context/GalleryCacheContext';
 import { getYouTubeThumbnail } from '../lib/utils';
 import './MasonryGrid.css';
