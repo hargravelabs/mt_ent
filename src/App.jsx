@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import CustomCursor from './CustomCursor';
 import Footer from './components/Footer';
 import Home from './components/Home';
@@ -8,8 +8,17 @@ import { GalleryCacheProvider } from './context/GalleryCacheContext';
 import useSmoothScroll from './hooks/useSmoothScroll';
 import './index.css';
 
+// Force top scroll on page refresh before React even renders
+if ('scrollRestoration' in window.history) {
+  window.history.scrollRestoration = 'manual';
+}
+window.onbeforeunload = function () {
+  window.scrollTo(0, 0);
+};
+
 const ScrollToHash = () => {
   const { pathname, hash } = useLocation();
+  const navigate = useNavigate();
 
   // Disable global Lenis on the cinematography page so CSS scroll snapping can work natively
   const isCinematography = pathname.includes('/works/cinematography');
@@ -50,6 +59,9 @@ const ScrollToHash = () => {
       window.removeEventListener('mt:services-ready', tryResolve);
       window.removeEventListener('mt:horizontal-reel-ready', tryResolve);
       document.documentElement.classList.remove('hash-jump-pending');
+      
+      // Clean up the URL hash so a page refresh starts at the top
+      navigate(pathname, { replace: true });
     };
 
     function tryResolve() {
@@ -114,9 +126,7 @@ const ScrollToHash = () => {
   }, [pathname]);
 
   useEffect(() => {
-    if ('scrollRestoration' in window.history) {
-      window.history.scrollRestoration = 'manual';
-    }
+    // Other scroll/lenis logic can go here if needed
   }, []);
 
   useEffect(() => {
