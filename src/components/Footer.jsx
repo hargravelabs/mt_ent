@@ -75,7 +75,9 @@ const Footer = () => {
                     
                     <div className="footer-col">
                         <span className="col-label">Contact</span>
-                        <a href="tel:+6142208093" className="footer-link-text">+61 422 080 93</a>
+                        <div className="social-links">
+                            <a href="tel:+6142208093" className="footer-link-text hover-underline">+61 422 080 93</a>
+                        </div>
                     </div>
                     
                     <div className="footer-col">
@@ -91,15 +93,12 @@ const Footer = () => {
                 </div>
 
                 <div className="footer-bottom">
-                    <div className="footer-left">
-                        <div className="footer-copyright">
-                            &copy; {new Date().getFullYear()} MT Entertainment.
-                        </div>
-                        <div className="agency-credit">
-                            Designed and developed by <a href="https://www.hargravelabs.com/" target="_blank" rel="noopener noreferrer" className="hover-underline">Hargrave Labs</a>
-                        </div>
+                    <div className="footer-copyright">
+                        &copy; {new Date().getFullYear()} MT Entertainment.
                     </div>
-                    <div className="footer-brand">Visual Architecture.</div>
+                    <div className="footer-brand">
+                        Website by <a href="https://www.hargravelabs.com/" target="_blank" rel="noopener noreferrer" className="hover-underline">Hargrave Labs</a>
+                    </div>
                     <button className="back-to-top" onClick={scrollToTop}>
                         Back to Top &uarr;
                     </button>
