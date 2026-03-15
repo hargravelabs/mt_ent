@@ -38,15 +38,6 @@ const Footer = () => {
 
     return (
         <footer className="reveal-footer" id="contact">
-            {/* Marquee Background */}
-            <div className="footer-marquee">
-                <div className="marquee-track">
-                    <span>FILM • PHOTOGRAPHY • CREATIVE DIRECTION • EVENT MEDIA • </span>
-                    <span>FILM • PHOTOGRAPHY • CREATIVE DIRECTION • EVENT MEDIA • </span>
-                    <span>FILM • PHOTOGRAPHY • CREATIVE DIRECTION • EVENT MEDIA • </span>
-                </div>
-            </div>
-
             {/* Ambient Noise */}
             <div className="footer-noise"></div>
 
