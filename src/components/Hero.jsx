@@ -99,11 +99,12 @@ const Hero = () => {
                 tl.to('.light-wipe', { scale: 3.5, opacity: 1, duration: 2.5, ease: "expo.out" }, "wipeStart")
                     .to(document.querySelector('.home-content'), { backgroundColor: 'var(--bg-light)', duration: 0.2 }, "wipeStart+=0.5")
                     .to('.light-theme-bg', { opacity: 1, duration: 0.2 }, "wipeStart+=0.5")
+                    // Move to absolute immediately after fade-in so it no longer covers the footer area as position:fixed
+                    .set('.light-theme-bg', { position: 'absolute' })
                     .to('.light-wipe', { opacity: 0, duration: 1.6, ease: "power2.out" }, ">")
                     .to('.light-beam', { opacity: 0.02, mixBlendMode: 'normal', duration: 1.2 }, "-=1.2")
-                    // After wipe: hide void-bg, show footer, make light-theme-bg absolute so it doesn't cover footer
+                    // After wipe: hide void-bg, show footer
                     .set(document.querySelector('.void-bg'), { opacity: 0 })
-                    .set('.light-theme-bg', { position: 'absolute' })
                     .to(document.querySelector('.reveal-footer'), { opacity: 1, duration: 0.6, ease: 'power2.out' });
 
                 // Typography Stagger
