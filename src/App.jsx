@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import CustomCursor from './CustomCursor';
 import Footer from './components/Footer';
 import Home from './components/Home';
@@ -7,6 +7,15 @@ import CapabilityWorks from './components/CapabilityWorks';
 import { GalleryCacheProvider } from './context/GalleryCacheContext';
 import useSmoothScroll from './hooks/useSmoothScroll';
 import './index.css';
+
+/**
+ * /intro route — clears the intro-played flag and redirects to /
+ * so the Hero cinematic animation plays from the beginning.
+ */
+const IntroRedirect = () => {
+  sessionStorage.removeItem('mt_intro_played');
+  return <Navigate to="/" replace />;
+};
 
 // Force top scroll on page refresh before React even renders
 if ('scrollRestoration' in window.history) {
@@ -186,6 +195,7 @@ function App() {
         <div className="main-app">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/intro" element={<IntroRedirect />} />
             <Route path="/works/:capability" element={<CapabilityWorks />} />
           </Routes>
         </div>
