@@ -6,6 +6,8 @@ import './MasonryGrid.css';
 
 const MasonryGridItem = ({ item, index }) => {
     const isVideo = item.mediaType === 'video' && (item.video?.asset?.url || item.youtubeUrl);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const videoRef = useRef(null);
                 
     // For videos, use the videoThumbnail if provided, else it falls back
     const imageSource = isVideo ? item.videoThumbnail : item.image;
@@ -64,16 +66,33 @@ const MasonryGridItem = ({ item, index }) => {
                 }}
             >
                 {isVideo && item.video?.asset?.url ? (
-                    // Use the optimized poster image to save bandwidth before play
-                    <video 
-                        src={item.video.asset.url} 
-                        poster={optimizedImageUrl} 
-                        autoPlay 
-                        muted 
-                        loop 
-                        playsInline 
-                        className="masonry-image" 
-                    />
+                    <div className="video-container" onClick={() => {
+                        if (videoRef.current) {
+                            if (isPlaying) {
+                                videoRef.current.pause();
+                            } else {
+                                videoRef.current.play();
+                            }
+                            setIsPlaying(!isPlaying);
+                        }
+                    }}>
+                        <video 
+                            ref={videoRef}
+                            src={item.video.asset.url} 
+                            poster={optimizedImageUrl} 
+                            muted 
+                            loop 
+                            playsInline 
+                            className="masonry-image" 
+                        />
+                        {!isPlaying && (
+                            <div className="video-play-btn">
+                                <svg viewBox="0 0 24 24" fill="white" width="32" height="32">
+                                    <polygon points="5,3 19,12 5,21" />
+                                </svg>
+                            </div>
+                        )}
+                    </div>
                 ) : optimizedImageUrl ? (
                     <img 
                         src={optimizedImageUrl} 

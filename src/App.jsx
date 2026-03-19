@@ -184,26 +184,39 @@ const ScrollToHash = () => {
   return null;
 };
 
+function AppContent() {
+  const { pathname } = useLocation();
+  const isWorksPage = pathname.startsWith('/works/');
+
+  return (
+    <>
+      <ScrollToHash />
+      <CustomCursor />
+      {!isWorksPage && <div className="void-bg"></div>}
+
+      <div className="main-app">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/intro" element={<IntroRedirect />} />
+          <Route path="/works/:capability" element={<CapabilityWorks />} />
+        </Routes>
+      </div>
+
+      {/* This spacer provides the natural scroll height to reveal the fixed footer below main-app */}
+      {!isWorksPage && (
+        <div className="footer-spacer" style={{ height: '100vh', pointerEvents: 'none' }}></div>
+      )}
+
+      <Footer />
+    </>
+  );
+}
+
 function App() {
   return (
     <GalleryCacheProvider>
       <Router>
-        <ScrollToHash />
-        <CustomCursor />
-        <div className="void-bg"></div>
-
-        <div className="main-app">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/intro" element={<IntroRedirect />} />
-            <Route path="/works/:capability" element={<CapabilityWorks />} />
-          </Routes>
-        </div>
-
-        {/* This spacer provides the natural scroll height to reveal the fixed footer below main-app */}
-        <div className="footer-spacer" style={{ height: '100vh', pointerEvents: 'none' }}></div>
-
-        <Footer />
+        <AppContent />
       </Router>
     </GalleryCacheProvider>
   );

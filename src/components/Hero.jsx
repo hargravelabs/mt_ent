@@ -63,6 +63,24 @@ const Hero = () => {
                     onComplete: () => sessionStorage.setItem('mt_intro_played', 'true')
                 });
 
+                const isMobile = window.innerWidth < 768;
+
+                if (isMobile) {
+                    // Simplified mobile intro — skip flicker, just fade in
+                    tl.set('.studio-light', { opacity: 0 })
+                      .set('.light-wipe', { opacity: 0 })
+                      .to(document.querySelector('.home-content'), { backgroundColor: 'var(--bg-light)', duration: 0.3 }, 0)
+                      .to('.light-theme-bg', { opacity: 1, duration: 0.3 }, 0)
+                      .set('.light-theme-bg', { position: 'absolute' })
+                      .set(document.querySelector('.void-bg'), { opacity: 0 })
+                      .to('.light-beam', { opacity: 0.02, mixBlendMode: 'normal', duration: 0.3 }, 0)
+                      .to('.header', { opacity: 1, y: 0, duration: 0.8, ease: "expo.out" }, 0.1)
+                      .to('.float-word', { opacity: 1, y: '0%', stagger: 0.04, duration: 0.8, ease: "expo.out" }, 0.15)
+                      .to('.bio-grid', { opacity: 1, y: 0, duration: 0.8, ease: "expo.out" }, 0.25)
+                      .to('.cta-group', { opacity: 1, y: 0, duration: 0.8, ease: "expo.out" }, 0.3)
+                      .to(document.querySelector('.reveal-footer'), { opacity: 1, duration: 0.4 });
+                } else {
+
                 tl.to('.studio-light', { opacity: 0.4, duration: 0.6, ease: "power2.inOut" });
 
                 // Realistic LED flicker
@@ -112,6 +130,7 @@ const Hero = () => {
                     .to('.float-word', { opacity: 1, y: '0%', stagger: 0.06, duration: 1.4, ease: "expo.out" }, "wipeStart+=1.3")
                     .to('.bio-grid', { opacity: 1, y: 0, duration: 1.4, ease: "expo.out" }, "wipeStart+=1.5")
                     .to('.cta-group', { opacity: 1, y: 0, duration: 1.4, ease: "expo.out" }, "wipeStart+=1.6");
+                } // end else (desktop)
             }
 
             // 4. Parallax Hero Background Interactions
