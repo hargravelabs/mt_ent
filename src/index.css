@@ -6,7 +6,7 @@
 :root {
   --bg-dark: #0a0a0a;
   --bg-darker: #050505;
-  --bg-light: #ffffff;
+  --bg-light: #F5E6D3;
   --text-dark: #121212;
   --text-gray: #888888;
   --text-light: #ffffff;
@@ -108,7 +108,7 @@ html.lenis body {
 
 .light-wipe {
   position: fixed;
-  background: radial-gradient(circle, rgba(255, 255, 255, 1) 15%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 100%);
+  background: radial-gradient(circle, rgba(245, 230, 211, 1) 15%, rgba(245, 230, 211, 0.5) 50%, rgba(245, 230, 211, 0) 100%);
   border-radius: 50%;
   width: 80vmax;
   height: 80vmax;
