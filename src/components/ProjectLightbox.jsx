@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { getYouTubeId } from '../lib/utils';
+import VideoControls from './ui/VideoControls';
+import './ui/VideoControls.css';
 import './ProjectLightbox.css';
 
 const ProjectLightbox = ({ project, onClose }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const lightboxVideoRef = useRef(null);
 
     let items = [];
     if (project?.mediaType === 'video' && project?.video?.asset?.url) {
@@ -89,17 +92,26 @@ const ProjectLightbox = ({ project, onClose }) => {
                     >
                         <AnimatePresence mode="wait">
                             {items[currentIndex]?.type === 'video' ? (
-                                <motion.video
+                                <motion.div
                                     key={currentIndex}
-                                    src={items[currentIndex].url}
                                     className="lightbox-image"
-                                    controls
-                                    autoPlay
+                                    style={{ position: 'relative' }}
                                     initial={{ opacity: 0, x: 20 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     exit={{ opacity: 0, x: -20 }}
                                     transition={{ duration: 0.3 }}
-                                />
+                                >
+                                    <video
+                                        ref={lightboxVideoRef}
+                                        src={items[currentIndex].url}
+                                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                                        autoPlay
+                                    />
+                                    <VideoControls
+                                        videoRef={lightboxVideoRef}
+                                        variant="full"
+                                    />
+                                </motion.div>
                             ) : items[currentIndex]?.type === 'youtube' ? (
                                 <motion.iframe
                                     key={currentIndex}

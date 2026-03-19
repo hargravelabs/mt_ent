@@ -1,7 +1,9 @@
 import React, { useState, useEffect, forwardRef, useRef } from 'react';
+import VideoControls from './ui/VideoControls';
+import './ui/VideoControls.css';
 import './MediaLoader.css';
 
-const MediaLoader = forwardRef(({ src, type = 'image', alt = '', className = '', mediaClass = '' }, ref) => {
+const MediaLoader = forwardRef(({ src, type = 'image', alt = '', className = '', mediaClass = '', showControls = false, controlsVariant = 'minimal' }, ref) => {
     const [isLoaded, setIsLoaded] = useState(false);
     const [hasError, setHasError] = useState(false);
     const internalRef = useRef(null);
@@ -46,17 +48,25 @@ const MediaLoader = forwardRef(({ src, type = 'image', alt = '', className = '',
             )}
 
             {type === 'video' ? (
-                <video
-                    ref={setRefs}
-                    src={src}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className={`media-element ${mediaClass} ${isLoaded ? 'loaded' : ''}`}
-                    onLoadedData={handleLoad}
-                    onError={handleError}
-                />
+                <>
+                    <video
+                        ref={setRefs}
+                        src={src}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        className={`media-element ${mediaClass} ${isLoaded ? 'loaded' : ''}`}
+                        onLoadedData={handleLoad}
+                        onError={handleError}
+                    />
+                    {showControls && (
+                        <VideoControls
+                            videoRef={internalRef}
+                            variant={controlsVariant}
+                        />
+                    )}
+                </>
             ) : (
                 <img
                     ref={setRefs}

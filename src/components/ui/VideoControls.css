@@ -1,0 +1,253 @@
+/* =============================================
+   Video Controls — Premium dark aesthetic
+   ============================================= */
+
+/* Full variant wrapper */
+.video-controls-wrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Minimal variant wrapper */
+.video-controls-minimal {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Center play icon (shown when paused) */
+.video-controls-center-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.6));
+}
+
+.video-controls-center-icon.visible {
+  opacity: 0.9;
+}
+
+/* Play overlay for minimal variant */
+.video-controls-play-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  border-radius: 50%;
+  color: white;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.video-controls-play-overlay.visible {
+  opacity: 1;
+}
+
+/* Bottom control bar — full variant */
+.video-controls-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 16px 14px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.3) 60%, transparent 100%);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+  cursor: default;
+}
+
+.video-controls-bar.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Bottom bar — minimal variant */
+.video-controls-bar-minimal {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 8px 8px 6px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.video-controls-bar-minimal.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Progress bar */
+.video-controls-progress {
+  position: relative;
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: height 0.15s ease;
+  touch-action: none;
+}
+
+.video-controls-bar:hover .video-controls-progress,
+.video-controls-bar-minimal:hover .video-controls-progress {
+  height: 6px;
+}
+
+.video-controls-progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--accent, #d2b48c);
+  border-radius: 2px;
+  pointer-events: none;
+  transition: background 0.2s ease;
+}
+
+.video-controls-progress-thumb {
+  position: absolute;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  background: white;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.15s ease;
+  pointer-events: none;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+.video-controls-progress:hover .video-controls-progress-thumb,
+.video-controls-bar-minimal:hover .video-controls-progress-thumb {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Buttons row */
+.video-controls-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.video-controls-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.video-controls-btn {
+  background: none;
+  border: none;
+  padding: 4px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.85;
+  transition: opacity 0.2s ease, transform 0.15s ease;
+  min-width: 32px;
+  min-height: 32px;
+}
+
+.video-controls-btn:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.video-controls-btn:focus-visible {
+  outline: 2px solid var(--accent, #d2b48c);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Time display */
+.video-controls-time {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .video-controls-bar {
+    padding: 10px 12px 12px;
+  }
+
+  .video-controls-progress {
+    height: 5px;
+  }
+
+  .video-controls-progress-thumb {
+    width: 14px;
+    height: 14px;
+  }
+
+  .video-controls-btn {
+    min-width: 40px;
+    min-height: 40px;
+    padding: 8px;
+  }
+
+  .video-controls-time {
+    font-size: 12px;
+  }
+
+  .video-controls-center-icon svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .video-controls-play-overlay {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+/* When used inside masonry grid items */
+.masonry-item .video-controls-minimal {
+  border-radius: inherit;
+}
+
+/* Focus styles for accessibility */
+.video-controls-wrapper:focus-visible,
+.video-controls-minimal:focus-visible {
+  outline: none;
+}
+
+.video-controls-progress:focus-visible {
+  outline: 2px solid var(--accent, #d2b48c);
+  outline-offset: 2px;
+  border-radius: 4px;
+}

@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { urlFor } from '../context/GalleryCacheContext';
 import { getYouTubeThumbnail } from '../lib/utils';
+import VideoControls from './ui/VideoControls';
+import './ui/VideoControls.css';
 import './MasonryGrid.css';
 
 const MasonryGridItem = ({ item, index }) => {
@@ -24,6 +26,7 @@ const MasonryGridItem = ({ item, index }) => {
         : (isVideo && item.youtubeUrl ? getYouTubeThumbnail(item.youtubeUrl) : null);
 
     const innerRef = useRef(null);
+    const masonryVideoRef = useRef(null);
     const [span, setSpan] = useState(20); // Fallback until measurement
 
     useEffect(() => {
@@ -64,16 +67,22 @@ const MasonryGridItem = ({ item, index }) => {
                 }}
             >
                 {isVideo && item.video?.asset?.url ? (
-                    // Use the optimized poster image to save bandwidth before play
-                    <video 
-                        src={item.video.asset.url} 
-                        poster={optimizedImageUrl} 
-                        autoPlay 
-                        muted 
-                        loop 
-                        playsInline 
-                        className="masonry-image" 
-                    />
+                    <>
+                        <video
+                            ref={masonryVideoRef}
+                            src={item.video.asset.url}
+                            poster={optimizedImageUrl}
+                            autoPlay
+                            muted
+                            loop
+                            playsInline
+                            className="masonry-image"
+                        />
+                        <VideoControls
+                            videoRef={masonryVideoRef}
+                            variant="minimal"
+                        />
+                    </>
                 ) : optimizedImageUrl ? (
                     <img 
                         src={optimizedImageUrl} 

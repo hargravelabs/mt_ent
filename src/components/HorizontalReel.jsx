@@ -220,6 +220,7 @@ const HorizontalReel = () => {
                                             src={project.videoUrl}
                                             type="video"
                                             mediaClass="parallax-media"
+                                            showControls
                                         />
                                     ) : null}
                                     <div className="card-overlay"></div>

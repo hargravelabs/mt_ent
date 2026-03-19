@@ -2,6 +2,8 @@
 
 import { useRef, useState, useEffect, ReactNode } from 'react';
 import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
+import VideoControls from './VideoControls';
+import './VideoControls.css';
 
 interface ScrollExpandMediaProps {
   mediaType?: 'video' | 'image';
@@ -143,7 +145,7 @@ const ScrollExpandMedia = ({
                       />
                     </div>
                   ) : (
-                    <div className="relative w-full h-full pointer-events-none">
+                    <div className="relative w-full h-full">
                        <video
                         ref={videoRef}
                         src={mediaSrc}
@@ -158,9 +160,11 @@ const ScrollExpandMedia = ({
                         disablePictureInPicture
                         disableRemotePlayback
                       />
-                      <motion.div
-                        className="absolute inset-0 bg-black/30 rounded-xl"
-                        style={{ opacity: overlayOpacity }}
+                      <VideoControls
+                        videoRef={videoRef}
+                        variant="full"
+                        onMuteToggle={(muted) => setIsVideoMuted(muted)}
+                        externalMuted={isVideoMuted}
                       />
                     </div>
                   )
@@ -227,22 +231,6 @@ const ScrollExpandMedia = ({
               </div>
             </motion.div>
           </div>
-          {/* Unmute/Play Indicator overlay */}
-          <motion.div 
-            className="absolute bottom-10 right-10 z-50 p-3 bg-black/50 backdrop-blur-md rounded-full border border-white/20 cursor-pointer pointer-events-auto"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            onClick={() => setIsVideoMuted(!isVideoMuted)}
-          >
-            {isVideoMuted ? (
-              <div className="flex items-center gap-2 px-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
-                <span className="text-[10px] uppercase tracking-widest text-white font-bold">Unmute</span>
-              </div>
-            ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
-            )}
-          </motion.div>
         </div>
       </section>
     </div>

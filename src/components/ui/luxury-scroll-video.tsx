@@ -3,6 +3,8 @@
 import { useRef, useState, useEffect, ReactNode } from 'react';
 import { motion, useScroll, useTransform, useMotionValueEvent, useSpring } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import VideoControls from './VideoControls';
+import './VideoControls.css';
 
 interface LuxuryScrollVideoProps {
   mediaType?: 'video' | 'image';
@@ -219,7 +221,7 @@ const LuxuryScrollVideo = ({
                       />
                     </div>
                   ) : (
-                    <div className="relative w-full h-full pointer-events-none">
+                    <div className="relative w-full h-full">
                        <video
                         ref={videoRef}
                         src={mediaSrc}
@@ -229,14 +231,16 @@ const LuxuryScrollVideo = ({
                         loop
                         playsInline
                         preload="auto"
-                        className={`w-full h-full ${isMobileState ? 'object-contain bg-black' : 'object-cover'}`} // remove rounded-xl
+                        className={`w-full h-full ${isMobileState ? 'object-contain bg-black' : 'object-cover'}`}
                         controls={false}
                         disablePictureInPicture
                         disableRemotePlayback
                       />
-                      <motion.div
-                        className="absolute inset-0 bg-black/20"
-                        style={{ opacity: isMobileState ? 0.3 : overlayOpacity }}
+                      <VideoControls
+                        videoRef={videoRef}
+                        variant="full"
+                        onMuteToggle={(muted) => setIsVideoMuted(muted)}
+                        externalMuted={isVideoMuted}
                       />
                     </div>
                   )
@@ -267,29 +271,6 @@ const LuxuryScrollVideo = ({
             </motion.div>
           </div>
           
-          {/* Unmute/Play Indicator overlay - Minimalist */}
-          <motion.div 
-            className={`absolute z-50 p-4 bg-transparent group cursor-pointer pointer-events-auto overflow-hidden rounded-full border border-white/5 backdrop-blur-sm hover:border-white/20 transition-all duration-500 ease-out ${isMobileState ? 'bottom-8 right-6 bg-black/40 min-h-[48px] min-w-[48px] flex items-center justify-center border-white/20' : 'bottom-12 right-6 md:right-12'}`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            onClick={() => setIsVideoMuted(!isVideoMuted)}
-          >
-            <div className="relative z-10 flex items-center gap-3">
-              {isVideoMuted ? (
-                <>
-                  <svg xmlns="http://www.w3.org/2000/svg" width={isMobileState ? "20" : "16"} height={isMobileState ? "20" : "16"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/80 group-hover:text-white transition-colors"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
-                  <span className={`${isMobileState ? 'text-sm' : 'text-[11px]'} uppercase tracking-[0.2em] text-white/80 group-hover:text-white font-medium transition-colors`}>Sound</span>
-                </>
-              ) : (
-                <>
-                  <svg xmlns="http://www.w3.org/2000/svg" width={isMobileState ? "20" : "16"} height={isMobileState ? "20" : "16"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
-                  <span className={`${isMobileState ? 'text-sm' : 'text-[11px]'} uppercase tracking-[0.2em] text-white font-medium`}>Mute</span>
-                </>
-              )}
-            </div>
-            {/* Subtle glow effect on hover */}
-            <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full" />
-          </motion.div>
         </div>
       </section>
     </div>
