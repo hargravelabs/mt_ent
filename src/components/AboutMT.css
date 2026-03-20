@@ -2,7 +2,7 @@
     position: relative;
     width: 100%;
     min-height: 100vh;
-    background-color: var(--bg-darker);
+    background: linear-gradient(180deg, var(--bg-darker) 0%, #0d0b09 40%, #0a0808 60%, var(--bg-darker) 100%);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -57,6 +57,11 @@
     justify-content: center;
     gap: 0.3em 0.25em;
     letter-spacing: -0.01em;
+}
+
+.about-line-1,
+.about-line-2 {
+    display: contents;
 }
 
 .about-statement .word {

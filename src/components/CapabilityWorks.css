@@ -18,19 +18,47 @@
 }
 
 .back-link {
-    color: var(--text-gray);
-    text-decoration: none;
-    margin-bottom: 2rem;
-    display: inline-block;
-    transition: color 0.3s ease;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-weight: 500;
+    display: none; /* replaced by fixed button */
 }
 
-.back-link:hover {
-    color: var(--accent);
+/* Fixed "Back to Studio" button — always visible on all devices */
+.back-to-studio-fixed {
+    position: fixed;
+    top: 1.5rem;
+    left: 1.5rem;
+    z-index: 200;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.65rem 1.4rem;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 50px;
+    color: var(--text-dark);
+    text-decoration: none;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.back-to-studio-fixed:hover {
+    background: var(--text-dark);
+    color: var(--bg-light);
+    border-color: var(--text-dark);
+}
+
+@media (max-width: 768px) {
+    .back-to-studio-fixed {
+        top: 1rem;
+        left: 1rem;
+        padding: 0.55rem 1.1rem;
+        font-size: 0.72rem;
+    }
 }
 
 .capability-title {
@@ -42,4 +70,74 @@
     font-weight: 400;
     letter-spacing: -0.02em;
     color: var(--text-dark);
+}
+
+/* Event Media Services Grid */
+.event-services-grid {
+    margin-bottom: 3rem;
+}
+
+.event-services-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--text-gray, #888);
+    margin-bottom: 1.5rem;
+}
+
+.event-services-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.event-service-card {
+    padding: 2rem 1.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+    transition: all 0.3s ease;
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.event-service-card:hover {
+    border-color: rgba(0, 0, 0, 0.15);
+    background: rgba(0, 0, 0, 0.04);
+    transform: translateY(-2px);
+}
+
+.event-service-card svg {
+    color: var(--text-dark, #1a1a1a);
+    margin-bottom: 1rem;
+    opacity: 0.7;
+}
+
+.event-service-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 400;
+    font-style: italic;
+    margin-bottom: 0.5rem;
+    color: var(--text-dark, #1a1a1a);
+}
+
+.event-service-card p {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    color: var(--text-gray, #666);
+    line-height: 1.5;
+    font-weight: 300;
+}
+
+@media (max-width: 768px) {
+    .event-services-cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .event-services-cards {
+        grid-template-columns: 1fr;
+    }
 }
