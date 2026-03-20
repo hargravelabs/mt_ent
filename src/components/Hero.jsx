@@ -210,9 +210,9 @@ const Hero = () => {
                             <span className="logo-text">MT Entertainment</span>
                         </div>
                         <nav className="nav-links">
-                            <a href="#about" className="nav-link" onClick={(e) => handleNavClick(e, '#about')}>About Us</a>
                             <a href="#portfolio" className="nav-link" onClick={(e) => handleNavClick(e, '#portfolio')}>The Reel</a>
                             <a href="#services" className="nav-link" onClick={(e) => handleNavClick(e, '#services')}>Services</a>
+                            <a href="#about" className="nav-link" onClick={(e) => handleNavClick(e, '#about')}>About Us</a>
                             <a href="#contact" className="nav-link" onClick={(e) => handleNavClick(e, '#contact')}>Let's create</a>
                         </nav>
                     </header>
