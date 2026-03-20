@@ -9,81 +9,97 @@ const AboutMT = () => {
     const sectionRef = useRef(null);
 
     useEffect(() => {
-        const ctx = gsap.context(() => {
-            const line1Words = gsap.utils.toArray('.about-line-1 .word');
-            const line2Words = gsap.utils.toArray('.about-line-2 .word');
+        let ctx;
 
-            // 1. Main Statement Animation
-            const statementTl = gsap.timeline({
-                scrollTrigger: {
-                    trigger: '.about-content',
-                    start: "top 75%",
-                    toggleActions: "play none none none"
-                }
-            });
+        const initAnimations = () => {
+            ctx = gsap.context(() => {
+                const line1Words = gsap.utils.toArray('.about-line-1 .word');
+                const line2Words = gsap.utils.toArray('.about-line-2 .word');
 
-            // Reveal label
-            statementTl.to('.about-label', {
-                opacity: 1,
-                y: -10,
-                duration: 0.5,
-                ease: "power2.out"
-            }, 0);
+                // 1. Main Statement Animation
+                const statementTl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: '.about-content',
+                        start: "top 75%",
+                        toggleActions: "play none none none"
+                    }
+                });
 
-            // Expand background glow
-            statementTl.to('.about-glow', {
-                scale: 1.5,
-                opacity: 1,
-                duration: 2,
-                ease: "power1.inOut"
-            }, 0);
+                // Reveal label
+                statementTl.to('.about-label', {
+                    opacity: 1,
+                    y: -10,
+                    duration: 0.5,
+                    ease: "power2.out"
+                }, 0);
 
-            // Line 1: stagger reveal with blur
-            statementTl.to(line1Words, {
-                opacity: 1,
-                y: 0,
-                filter: "blur(0px)",
-                stagger: 0.08,
-                duration: 1.0,
-                ease: "power3.out"
-            }, 0.2);
+                // Expand background glow
+                statementTl.to('.about-glow', {
+                    scale: 1.5,
+                    opacity: 1,
+                    duration: 2,
+                    ease: "power1.inOut"
+                }, 0);
 
-            // Line 2: different animation — slide up from below with a delay
-            statementTl.to(line2Words, {
-                opacity: 1,
-                y: 0,
-                filter: "blur(0px)",
-                stagger: 0.12,
-                duration: 1.4,
-                ease: "expo.out"
-            }, 1.0);
+                // Line 1: stagger reveal with blur
+                statementTl.to(line1Words, {
+                    opacity: 1,
+                    y: 0,
+                    filter: "blur(0px)",
+                    stagger: 0.08,
+                    duration: 1.0,
+                    ease: "power3.out"
+                }, 0.2);
 
-            // 2. Details & SEO Text Animation (Triggered together)
-            const detailsTl = gsap.timeline({
-                scrollTrigger: {
-                    trigger: '.about-details',
-                    start: "top 85%",
-                    toggleActions: "play none none none"
-                }
-            });
+                // Line 2: different animation — slide up from below with a delay
+                statementTl.to(line2Words, {
+                    opacity: 1,
+                    y: 0,
+                    filter: "blur(0px)",
+                    stagger: 0.12,
+                    duration: 1.4,
+                    ease: "expo.out"
+                }, 1.0);
 
-            detailsTl.to('.about-details', {
-                opacity: 1,
-                y: -10,
-                duration: 1,
-                ease: "power2.out"
-            }, 0);
+                // 2. Details & SEO Text Animation (Triggered together)
+                const detailsTl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: '.about-details',
+                        start: "top 85%",
+                        toggleActions: "play none none none"
+                    }
+                });
 
-            detailsTl.to('.about-seo-text', {
-                opacity: 1,
-                y: 0,
-                duration: 1,
-                ease: "power2.out"
-            }, 0);
+                detailsTl.to('.about-details', {
+                    opacity: 1,
+                    y: -10,
+                    duration: 1,
+                    ease: "power2.out"
+                }, 0);
 
-        }, sectionRef);
+                detailsTl.to('.about-seo-text', {
+                    opacity: 1,
+                    y: 0,
+                    duration: 1,
+                    ease: "power2.out"
+                }, 0);
 
-        return () => ctx.revert();
+            }, sectionRef);
+        };
+
+        // Defer ScrollTrigger creation until HorizontalReel's pin-spacing is
+        // established, otherwise trigger positions are calculated on a shorter
+        // page and the animation fires before the user scrolls here.
+        if (window.__mtHorizontalReelReady) {
+            initAnimations();
+        } else {
+            window.addEventListener('mt:horizontal-reel-ready', initAnimations, { once: true });
+        }
+
+        return () => {
+            window.removeEventListener('mt:horizontal-reel-ready', initAnimations);
+            if (ctx) ctx.revert();
+        };
     }, []);
 
     return (
