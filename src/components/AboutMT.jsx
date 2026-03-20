@@ -10,7 +10,8 @@ const AboutMT = () => {
 
     useEffect(() => {
         const ctx = gsap.context(() => {
-            const words = gsap.utils.toArray('.about-statement .word');
+            const line1Words = gsap.utils.toArray('.about-line-1 .word');
+            const line2Words = gsap.utils.toArray('.about-line-2 .word');
 
             // 1. Main Statement Animation
             const statementTl = gsap.timeline({
@@ -37,15 +38,25 @@ const AboutMT = () => {
                 ease: "power1.inOut"
             }, 0);
 
-            // Stagger reveal of the main statement words with a cool blur unfocus effect
-            statementTl.to(words, {
+            // Line 1: stagger reveal with blur
+            statementTl.to(line1Words, {
                 opacity: 1,
                 y: 0,
                 filter: "blur(0px)",
-                stagger: 0.1,
-                duration: 1.2,
+                stagger: 0.08,
+                duration: 1.0,
                 ease: "power3.out"
             }, 0.2);
+
+            // Line 2: different animation — slide up from below with a delay
+            statementTl.to(line2Words, {
+                opacity: 1,
+                y: 0,
+                filter: "blur(0px)",
+                stagger: 0.12,
+                duration: 1.4,
+                ease: "expo.out"
+            }, 1.0);
 
             // 2. Details & SEO Text Animation (Triggered together)
             const detailsTl = gsap.timeline({
@@ -84,21 +95,25 @@ const AboutMT = () => {
             <div className="about-content">
                 <p className="about-label">About MT Entertainment</p>
                 <h2 className="about-statement" style={{ maxWidth: "1000px", margin: "0 auto" }}>
-                    <span className="word">MT</span>
-                    <span className="word">Entertainment</span>
-                    <span className="word">is</span>
-                    <span className="word">a</span>
-                    <span className="word">premier</span>
-                    <span className="word">production</span>
-                    <span className="word">agency</span>
-                    <span className="word">delivering</span>
-                    <span className="word">high-end</span>
-                    <span className="word"><i>Photography,</i></span>
-                    <span className="word"><i>Videography,</i></span>
-                    <span className="word"><i>Cinematography,</i></span>
-                    <span className="word">and</span>
-                    <span className="word"><i>Event</i></span>
-                    <span className="word"><i>Media.</i></span>
+                    <span className="about-line-1">
+                        <span className="word">MT</span>
+                        <span className="word">Entertainment</span>
+                        <span className="word">is</span>
+                        <span className="word">a</span>
+                        <span className="word">premier</span>
+                        <span className="word">production</span>
+                        <span className="word">agency</span>
+                        <span className="word">delivering</span>
+                        <span className="word">high-end</span>
+                    </span>
+                    <span className="about-line-2">
+                        <span className="word"><i>Photography,</i></span>
+                        <span className="word"><i>Videography,</i></span>
+                        <span className="word"><i>Cinematography,</i></span>
+                        <span className="word">and</span>
+                        <span className="word"><i>Event</i></span>
+                        <span className="word"><i>Media.</i></span>
+                    </span>
                 </h2>
 
                 <div className="about-details">

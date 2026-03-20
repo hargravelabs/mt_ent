@@ -52,6 +52,24 @@
     background-position: center;
 }
 
+/* Watermark overlay */
+.masonry-item::before {
+    content: '';
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    width: 30px;
+    height: 30px;
+    background-image: url('../assets/MT_white.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.35;
+    z-index: 5;
+    pointer-events: none;
+    filter: drop-shadow(0 1px 3px rgba(0,0,0,0.5));
+}
+
 .masonry-image {
     width: 100%;
     height: 100%;
@@ -95,4 +113,147 @@
 .placeholder-image {
     width: 100%;
     height: 100%;
+}
+
+/* Video play button overlay */
+.video-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.video-play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 4;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+}
+
+.video-container:hover .video-play-btn {
+    background: rgba(0, 0, 0, 0.7);
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+/* ─── Video Lightbox ─── */
+.video-lightbox-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.video-lightbox-content {
+    position: relative;
+    width: 90vw;
+    max-width: 1100px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.video-lightbox-close {
+    position: absolute;
+    top: -44px;
+    right: 0;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 4px 10px;
+    transition: color 0.2s;
+    z-index: 10;
+}
+
+.video-lightbox-close:hover {
+    color: #fff;
+}
+
+.video-lightbox-video {
+    width: 100%;
+    border-radius: 10px 10px 0 0;
+    display: block;
+    background: #000;
+    max-height: 75vh;
+    object-fit: contain;
+    cursor: pointer;
+}
+
+.video-lightbox-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    background: rgba(20, 20, 20, 0.95);
+    border-radius: 0 0 10px 10px;
+}
+
+.vlb-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    opacity: 0.85;
+    transition: opacity 0.2s;
+}
+
+.vlb-btn:hover {
+    opacity: 1;
+}
+
+.vlb-time {
+    font-family: 'Inter', monospace;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+    min-width: 36px;
+    text-align: center;
+    user-select: none;
+}
+
+.vlb-progress {
+    flex: 1;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 2px;
+    cursor: pointer;
+    position: relative;
+    transition: height 0.15s;
+}
+
+.vlb-progress:hover {
+    height: 6px;
+}
+
+.vlb-progress-filled {
+    height: 100%;
+    background: #fff;
+    border-radius: 2px;
+    pointer-events: none;
+}
+
+@media (max-width: 768px) {
+    .video-lightbox-content {
+        width: 96vw;
+    }
+    .video-lightbox-close {
+        top: -38px;
+    }
 }

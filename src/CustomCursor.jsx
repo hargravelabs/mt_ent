@@ -2,12 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import './CustomCursor.css';
 
+const INTERACTIVE_SELECTOR = 'a, button, .magnetic-btn, [role="button"], .service-card';
+
 const CustomCursor = () => {
     const cursorRef = useRef(null);
     const [isTouchDevice, setIsTouchDevice] = useState(false);
 
     useEffect(() => {
-        // Check if device supports touch
         setIsTouchDevice(window.matchMedia("(pointer: coarse)").matches);
     }, []);
 
@@ -16,29 +17,15 @@ const CustomCursor = () => {
 
         const cursor = cursorRef.current;
 
-        // We use GSAP quickTo to make cursor follow mouse position incredibly performant
         const setX = gsap.quickTo(cursor, "x", { duration: 0.15, ease: "power3" });
         const setY = gsap.quickTo(cursor, "y", { duration: 0.15, ease: "power3" });
 
         let cursorVisible = false;
+        let isExpanded = false;
 
-        const moveCursor = (e) => {
-            // Offset by half the cursor size (20px width/height) to center it on mouse
-            setX(e.clientX - 10);
-            setY(e.clientY - 10);
-
-            if (!cursorVisible) {
-                cursorVisible = true;
-                cursor.style.opacity = '1';
-            }
-        };
-
-        window.addEventListener("mousemove", moveCursor);
-
-        // Hover effects on interactive elements
-        const interactiveElements = document.querySelectorAll('a, button, .magnetic-btn');
-
-        const handleMouseEnter = () => {
+        const expandCursor = () => {
+            if (isExpanded) return;
+            isExpanded = true;
             gsap.to(cursor, {
                 scale: 2.5,
                 backgroundColor: "rgba(255, 255, 255, 0.1)",
@@ -47,7 +34,9 @@ const CustomCursor = () => {
             });
         };
 
-        const handleMouseLeave = () => {
+        const shrinkCursor = () => {
+            if (!isExpanded) return;
+            isExpanded = false;
             gsap.to(cursor, {
                 scale: 1,
                 backgroundColor: "#ffffff",
@@ -56,17 +45,28 @@ const CustomCursor = () => {
             });
         };
 
-        interactiveElements.forEach((el) => {
-            el.addEventListener('mouseenter', handleMouseEnter);
-            el.addEventListener('mouseleave', handleMouseLeave);
-        });
+        const moveCursor = (e) => {
+            setX(e.clientX - 10);
+            setY(e.clientY - 10);
+
+            if (!cursorVisible) {
+                cursorVisible = true;
+                cursor.style.opacity = '1';
+            }
+
+            // Check if the element under the cursor (or any ancestor) is interactive
+            const target = e.target;
+            if (target && target.closest(INTERACTIVE_SELECTOR)) {
+                expandCursor();
+            } else {
+                shrinkCursor();
+            }
+        };
+
+        window.addEventListener("mousemove", moveCursor);
 
         return () => {
             window.removeEventListener("mousemove", moveCursor);
-            interactiveElements.forEach((el) => {
-                el.removeEventListener('mouseenter', handleMouseEnter);
-                el.removeEventListener('mouseleave', handleMouseLeave);
-            });
         };
     }, [isTouchDevice]);
 
