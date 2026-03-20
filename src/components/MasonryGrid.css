@@ -115,38 +115,33 @@
     height: 100%;
 }
 
-/* Video play button overlay */
-.video-container {
-    position: relative;
-    width: 100%;
-    height: 100%;
+/* Clickable masonry items */
+.masonry-item-clickable {
     cursor: pointer;
 }
 
+/* Video play button overlay */
 .video-play-btn {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 4;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(4px);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    opacity: 0.9;
+    pointer-events: none;
 }
 
-.video-container:hover .video-play-btn {
-    background: rgba(0, 0, 0, 0.7);
-    transform: translate(-50%, -50%) scale(1.1);
+.masonry-item:hover .video-play-btn {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.08);
 }
 
-/* ─── Video Lightbox ─── */
-.video-lightbox-overlay {
+/* ─── Lightbox Overlay & Shell ─── */
+.vlb-overlay {
     position: fixed;
     inset: 0;
     z-index: 9999;
@@ -156,38 +151,91 @@
     justify-content: center;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
+    cursor: pointer;
+    padding: 24px;
 }
 
-.video-lightbox-content {
+.vlb-container {
     position: relative;
     width: 90vw;
     max-width: 1100px;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
+    cursor: default;
 }
 
-.video-lightbox-close {
+/* ─── Navigation Arrows ─── */
+.vlb-nav {
     position: absolute;
-    top: -44px;
-    right: 0;
-    background: none;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.4);
     border: none;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 1.5rem;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    padding: 4px 10px;
-    transition: color 0.2s;
     z-index: 10;
+    transition: background 0.2s ease, transform 0.2s ease;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 }
 
-.video-lightbox-close:hover {
-    color: #fff;
+.vlb-nav:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-50%) scale(1.08);
+}
+
+.vlb-nav-prev {
+    left: 16px;
+}
+
+.vlb-nav-next {
+    right: 16px;
+}
+
+@media (max-width: 768px) {
+    .vlb-nav {
+        width: 40px;
+        height: 40px;
+    }
+    .vlb-nav-prev {
+        left: 8px;
+    }
+    .vlb-nav-next {
+        right: 8px;
+    }
+}
+
+/* Photo-specific: container shrinks to image size */
+.vlb-container:has(.vlb-expanded-image) {
+    width: auto;
+    max-width: 90vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vlb-expanded-image {
+    max-width: 90vw;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: 10px;
+    display: block;
+}
+
+/* ─── Sanity Video Player (YouTube-style controls) ─── */
+.vlb-player-wrapper {
+    position: relative;
+    width: 100%;
+    background: #000;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .video-lightbox-video {
     width: 100%;
-    border-radius: 10px 10px 0 0;
     display: block;
     background: #000;
     max-height: 75vh;
@@ -195,20 +243,114 @@
     cursor: pointer;
 }
 
+/* Center play button (YouTube red pill) */
+.vlb-center-play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    z-index: 5;
+    opacity: 0.9;
+    transition: opacity 0.2s;
+}
+
+.vlb-center-play:hover {
+    opacity: 1;
+}
+
+/* Controls bar */
 .video-lightbox-controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
+    padding-top: 30px;
+    transition: opacity 0.3s ease;
+    z-index: 6;
+}
+
+.vlb-controls-visible {
+    opacity: 1;
+}
+
+.vlb-controls-hidden {
+    opacity: 0;
+}
+
+/* Progress bar container (full width at top of controls) */
+.vlb-progress-container {
+    padding: 0 12px;
+    margin-bottom: 4px;
+}
+
+.vlb-progress {
+    width: 100%;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    position: relative;
+    transition: height 0.1s ease;
+}
+
+.vlb-progress:hover {
+    height: 5px;
+}
+
+.vlb-progress-buffered {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.3);
+    pointer-events: none;
+}
+
+.vlb-progress-filled {
+    height: 100%;
+    background: #ff0000;
+    position: relative;
+    pointer-events: none;
+}
+
+.vlb-progress-handle {
+    position: absolute;
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #ff0000;
+    opacity: 0;
+    transition: opacity 0.1s;
+}
+
+.vlb-progress:hover .vlb-progress-handle {
+    opacity: 1;
+}
+
+/* Controls row */
+.vlb-controls-row {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 10px 16px;
-    background: rgba(20, 20, 20, 0.95);
-    border-radius: 0 0 10px 10px;
+    justify-content: space-between;
+    padding: 4px 8px 8px;
+}
+
+.vlb-controls-left,
+.vlb-controls-right {
+    display: flex;
+    align-items: center;
+    gap: 4px;
 }
 
 .vlb-btn {
     background: none;
     border: none;
     cursor: pointer;
-    padding: 4px;
+    padding: 6px;
     display: flex;
     align-items: center;
     opacity: 0.85;
@@ -219,41 +361,82 @@
     opacity: 1;
 }
 
-.vlb-time {
-    font-family: 'Inter', monospace;
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.6);
-    min-width: 36px;
-    text-align: center;
-    user-select: none;
+/* Volume group */
+.vlb-volume-group {
+    display: flex;
+    align-items: center;
 }
 
-.vlb-progress {
-    flex: 1;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.15);
+.vlb-volume-slider {
+    width: 0;
+    opacity: 0;
+    transition: width 0.2s ease, opacity 0.2s ease;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.3);
     border-radius: 2px;
     cursor: pointer;
-    position: relative;
-    transition: height 0.15s;
+    margin-left: 0;
 }
 
-.vlb-progress:hover {
-    height: 6px;
+.vlb-volume-group:hover .vlb-volume-slider {
+    width: 60px;
+    opacity: 1;
+    margin-left: 4px;
 }
 
-.vlb-progress-filled {
-    height: 100%;
+.vlb-volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
     background: #fff;
-    border-radius: 2px;
-    pointer-events: none;
+    cursor: pointer;
+}
+
+.vlb-volume-slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    border: none;
+}
+
+.vlb-time {
+    font-family: 'Inter', 'Roboto', monospace;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.8);
+    min-width: 36px;
+    user-select: none;
+    padding: 0 4px;
+    white-space: nowrap;
+}
+
+/* ─── YouTube Lightbox ─── */
+.vlb-youtube-wrapper {
+    aspect-ratio: 16 / 9;
+}
+
+.vlb-youtube-iframe {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
 }
 
 @media (max-width: 768px) {
-    .video-lightbox-content {
+    .vlb-container {
         width: 96vw;
     }
-    .video-lightbox-close {
-        top: -38px;
+    .vlb-container:has(.vlb-expanded-image) {
+        max-width: 96vw;
+    }
+    .vlb-expanded-image {
+        max-width: 96vw;
+    }
+    .vlb-volume-group:hover .vlb-volume-slider {
+        width: 50px;
     }
 }
