@@ -204,6 +204,26 @@ html.hash-jump-pending .reveal-footer {
   overflow: hidden;
 }
 
+/* Gradient vignette at the bottom of the hero — eases transition into the dark reel */
+.hero-section::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 22vh;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(5, 5, 5, 0.06) 30%,
+    rgba(5, 5, 5, 0.25) 60%,
+    rgba(5, 5, 5, 0.55) 85%,
+    rgba(5, 5, 5, 0.8) 100%
+  );
+  pointer-events: none;
+  z-index: 30;
+}
+
 .hero-container {
   display: flex;
   flex-direction: column;
