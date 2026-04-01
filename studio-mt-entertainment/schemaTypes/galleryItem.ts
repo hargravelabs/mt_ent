@@ -28,6 +28,21 @@ export default defineType({
             validation: (Rule) => Rule.required(),
         }),
         defineField({
+            name: 'eventAlbum',
+            title: 'Event Album',
+            description: 'Assign this item to a specific event album.',
+            type: 'reference',
+            to: [{ type: 'eventAlbum' }],
+            hidden: ({ document }) => document?.category !== 'Event Media',
+            validation: (Rule) => Rule.custom((value, context) => {
+                const doc = context.document as unknown as { category: string };
+                if (doc.category === 'Event Media' && !value) {
+                    return 'An event album is required for Event Media items.';
+                }
+                return true;
+            }),
+        }),
+        defineField({
             name: 'mediaType',
             title: 'Media Type',
             type: 'string',
