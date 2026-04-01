@@ -1,0 +1,16 @@
+[
+  {
+    "id": "d3bf0ca5",
+    "label": "vite-dev",
+    "command": "cd /Users/jazzy/mt_ent && npx vite --config vite.config.local.js",
+    "cwd": "/Users/jazzy/mt_ent",
+    "ownerSessionFile": "/Users/jazzy/.gsd/sessions/--Users-jazzy-mt_ent--/2026-03-22T06-09-45-942Z_6b48a13a-ee40-4d13-83bb-d20cf92ed843.jsonl",
+    "persistAcrossSessions": false,
+    "startedAt": 1774159988091,
+    "processType": "server",
+    "group": null,
+    "readyPattern": null,
+    "readyPort": 5173,
+    "pid": 41838
+  }
+]

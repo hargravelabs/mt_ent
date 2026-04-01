@@ -42,6 +42,106 @@
     }
 }
 
+/* ─── Mobile iPhone Photos-Style Grid ─── */
+.mobile-photos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: calc((100vw - 6px) / 3);
+    gap: 2px;
+    width: 100%;
+    margin-top: 16px;
+    padding: 0;
+}
+
+.mobile-grid-thumb {
+    position: relative;
+    overflow: hidden;
+    background-color: #111;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    will-change: transform;
+}
+
+/* Hero tiles: 2x2 span */
+.mobile-grid-hero {
+    grid-column: span 2;
+    grid-row: span 2;
+    border-radius: 4px;
+}
+
+.mobile-grid-normal {
+    border-radius: 0;
+}
+
+.mobile-grid-thumb:active {
+    transform: scale(0.95);
+    transition: transform 0.12s ease-out;
+}
+
+.mobile-grid-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Subtle inner shine on top edge — premium feel */
+.mobile-grid-shine {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.06) 0%,
+        transparent 30%,
+        transparent 80%,
+        rgba(0, 0, 0, 0.15) 100%
+    );
+}
+
+.mobile-grid-placeholder {
+    width: 100%;
+    height: 100%;
+    background: #1a1a1a;
+}
+
+/* Video badge — frosted glass pill */
+.mobile-grid-video-badge {
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    padding: 3px 7px 3px 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 0.5px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Hero tile label — blurred bottom bar */
+.mobile-grid-hero-label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 16px 12px 10px;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+    pointer-events: none;
+}
+
+.mobile-grid-hero-label span {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: white;
+    letter-spacing: 0.02em;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
 .masonry-item {
     position: relative;
     border-radius: 12px;

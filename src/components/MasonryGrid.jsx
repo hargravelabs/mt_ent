@@ -6,6 +6,8 @@ import './MasonryGrid.css';
 
 /* ─── Shared Lightbox Shell ─── */
 const LightboxShell = ({ onClose, isVideo, hasPrev, hasNext, onPrev, onNext, children }) => {
+    const touchStartRef = useRef(null);
+
     useEffect(() => {
         document.body.style.overflow = 'hidden';
         if (isVideo) document.body.setAttribute('data-video-lightbox', '');
@@ -25,6 +27,26 @@ const LightboxShell = ({ onClose, isVideo, hasPrev, hasNext, onPrev, onNext, chi
         return () => window.removeEventListener('keydown', onKey);
     }, [onClose, hasPrev, hasNext, onPrev, onNext]);
 
+    const handleTouchStart = (e) => {
+        touchStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    };
+
+    const handleTouchEnd = (e) => {
+        if (!touchStartRef.current) return;
+        const dx = e.changedTouches[0].clientX - touchStartRef.current.x;
+        const dy = e.changedTouches[0].clientY - touchStartRef.current.y;
+        const absDx = Math.abs(dx);
+        const absDy = Math.abs(dy);
+
+        if (absDx > 50 && absDx > absDy) {
+            if (dx > 0 && hasPrev) onPrev();
+            else if (dx < 0 && hasNext) onNext();
+        } else if (dy > 80 && absDy > absDx) {
+            onClose(); // swipe down to close
+        }
+        touchStartRef.current = null;
+    };
+
     return (
         <motion.div
             className="vlb-overlay"
@@ -35,6 +57,8 @@ const LightboxShell = ({ onClose, isVideo, hasPrev, hasNext, onPrev, onNext, chi
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
             onClick={onClose}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
         >
             {/* Left arrow */}
             {hasPrev && (
@@ -403,9 +427,88 @@ const LightboxContent = ({ data }) => {
     return null;
 };
 
+/* ─── Mobile Photos Grid Item (iPhone Photos style) ─── */
+const MobileGridItem = ({ item, index, onItemClick, size = 'normal' }) => {
+    const isVideo = item.mediaType === 'video' && (item.video?.asset?.url || item.youtubeUrl);
+    const imageSource = isVideo ? item.videoThumbnail : item.image;
+    const coverImage = imageSource?.asset?.url;
+    const lqip = imageSource?.asset?.metadata?.lqip;
+
+    const imgWidth = size === 'hero' ? 800 : 400;
+    const optimizedImageUrl = coverImage
+        ? urlFor(imageSource).width(imgWidth).height(imgWidth).fit('crop').auto('format').url()
+        : (isVideo && item.youtubeUrl ? getYouTubeThumbnail(item.youtubeUrl) : null);
+
+    const isClickable = isVideo || !!optimizedImageUrl;
+
+    return (
+        <motion.div
+            className={`mobile-grid-thumb mobile-grid-${size}`}
+            initial={{ opacity: 0, scale: 0.92 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: "-20px" }}
+            transition={{
+                duration: 0.45,
+                delay: (index % 9) * 0.04,
+                ease: [0.25, 0.46, 0.45, 0.94],
+            }}
+            onClick={isClickable ? () => onItemClick(index) : undefined}
+            style={{
+                backgroundImage: lqip ? `url(${lqip})` : 'none',
+                backgroundSize: 'cover',
+            }}
+        >
+            {optimizedImageUrl ? (
+                <>
+                    <img
+                        src={optimizedImageUrl}
+                        alt={item.title || (isVideo ? "Video" : "Photo")}
+                        loading="lazy"
+                        className="mobile-grid-img"
+                    />
+                    <div className="mobile-grid-shine" />
+                    {isVideo && (
+                        <div className="mobile-grid-video-badge">
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="white">
+                                <polygon points="8,5 19,12 8,19" />
+                            </svg>
+                        </div>
+                    )}
+                    {size === 'hero' && item.title && (
+                        <div className="mobile-grid-hero-label">
+                            <span>{item.title}</span>
+                        </div>
+                    )}
+                </>
+            ) : (
+                <div className="mobile-grid-placeholder" />
+            )}
+        </motion.div>
+    );
+};
+
+/* ─── Compute mixed tile layout pattern ─── */
+const getMobileTileSize = (index) => {
+    // Repeating pattern per 9 items:
+    // Row 0: [hero (2x2)] [normal] [normal]  (indices 0,1,2 — but 0 spans 2 cols + 2 rows)
+    // Row 1: (hero cont)  [normal] [normal]  (indices 3,4)
+    // Row 2: [normal] [normal] [hero (2x2)]  (indices 5,6,7)
+    // Row 3: [normal] [normal] (hero cont)   (indices 8)
+    const pos = index % 9;
+    if (pos === 0 || pos === 7) return 'hero';
+    return 'normal';
+};
+
 /* ─── Masonry Grid ─── */
 const MasonryGrid = ({ items }) => {
     const [openIndex, setOpenIndex] = useState(null);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+    useEffect(() => {
+        const onResize = () => setIsMobile(window.innerWidth <= 768);
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
+    }, []);
 
     // Build list of expandable item indices
     const expandableIndices = React.useMemo(() => {
@@ -438,11 +541,25 @@ const MasonryGrid = ({ items }) => {
 
     return (
         <>
-            <div className="masonry-grid">
-                {items.map((item, index) => (
-                    <MasonryGridItem key={item._id} item={item} index={index} onItemClick={handleItemClick} />
-                ))}
-            </div>
+            {isMobile ? (
+                <div className="mobile-photos-grid">
+                    {items.map((item, index) => (
+                        <MobileGridItem
+                            key={item._id}
+                            item={item}
+                            index={index}
+                            size={getMobileTileSize(index)}
+                            onItemClick={handleItemClick}
+                        />
+                    ))}
+                </div>
+            ) : (
+                <div className="masonry-grid">
+                    {items.map((item, index) => (
+                        <MasonryGridItem key={item._id} item={item} index={index} onItemClick={handleItemClick} />
+                    ))}
+                </div>
+            )}
 
             <AnimatePresence>
                 {currentData && (
