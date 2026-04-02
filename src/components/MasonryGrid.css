@@ -309,12 +309,28 @@
 }
 
 /* Photo-specific: container shrinks to image size */
-.vlb-container:has(.vlb-expanded-image) {
+.vlb-container:has(.vlb-expanded-image),
+.vlb-container:has(.vlb-photo-wrapper) {
     width: auto;
     max-width: 90vw;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.vlb-photo-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vlb-photo-spinner-overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    min-height: 120px;
 }
 
 .vlb-expanded-image {
@@ -539,7 +555,8 @@
     .vlb-container {
         width: 96vw;
     }
-    .vlb-container:has(.vlb-expanded-image) {
+    .vlb-container:has(.vlb-expanded-image),
+    .vlb-container:has(.vlb-photo-wrapper) {
         max-width: 96vw;
     }
     .vlb-expanded-image {

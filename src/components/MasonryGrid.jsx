@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { urlFor } from '../context/GalleryCacheContext';
 import { getYouTubeThumbnail, getYouTubeId } from '../lib/utils';
 import './MasonryGrid.css';
+import './MediaLoader.css';
 
 /* ─── High-Quality Image Cache ─── */
 const hqImageCache = new Map(); // url -> HTMLImageElement (keeps decoded image in memory)
@@ -333,23 +334,27 @@ const YouTubeLightbox = ({ youtubeUrl }) => {
 
 /* ─── Photo Lightbox ─── */
 const PhotoLightbox = ({ src, hqSrc, alt }) => {
-    const [activeSrc, setActiveSrc] = useState(
-        hqSrc && hqImageCache.has(hqSrc) ? hqSrc : src
-    );
+    const targetSrc = hqSrc || src;
+    const [loaded, setLoaded] = useState(hqSrc ? hqImageCache.has(hqSrc) : true);
 
     useEffect(() => {
-        if (!hqSrc || hqSrc === src) return;
-        if (hqImageCache.has(hqSrc)) {
-            setActiveSrc(hqSrc);
-            return;
-        }
-        preloadImage(hqSrc).then(() => {
-            if (hqImageCache.has(hqSrc)) setActiveSrc(hqSrc);
-        });
-    }, [hqSrc, src]);
+        if (!hqSrc) { setLoaded(true); return; }
+        if (hqImageCache.has(hqSrc)) { setLoaded(true); return; }
+        setLoaded(false);
+        preloadImage(hqSrc).then(() => setLoaded(true));
+    }, [hqSrc]);
 
     return (
-        <img src={activeSrc} alt={alt || 'Expanded photo'} className="vlb-expanded-image" />
+        <div className="vlb-photo-wrapper">
+            {!loaded && (
+                <div className="vlb-photo-spinner-overlay">
+                    <div className="media-loader-spinner"></div>
+                </div>
+            )}
+            {loaded && (
+                <img src={targetSrc} alt={alt || 'Expanded photo'} className="vlb-expanded-image" />
+            )}
+        </div>
     );
 };
 
