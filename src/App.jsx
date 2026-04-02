@@ -4,6 +4,8 @@ import CustomCursor from './CustomCursor';
 import Footer from './components/Footer';
 import Home from './components/Home';
 import CapabilityWorks from './components/CapabilityWorks';
+import EventMediaGallery from './components/EventMediaGallery';
+import EventAlbumPage from './components/EventAlbumPage';
 import { GalleryCacheProvider } from './context/GalleryCacheContext';
 import useSmoothScroll from './hooks/useSmoothScroll';
 import './index.css';
@@ -198,6 +200,8 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/intro" element={<IntroRedirect />} />
+          <Route path="/works/event-media" element={<EventMediaGallery />} />
+          <Route path="/works/event-media/:slug" element={<EventAlbumPage />} />
           <Route path="/works/:capability" element={<CapabilityWorks />} />
         </Routes>
       </div>

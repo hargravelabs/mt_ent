@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { useClient } from 'sanity'
 import {
   Card,
@@ -16,10 +16,32 @@ import { UploadIcon } from '@sanity/icons'
 export function BulkUploadTool() {
   const client = useClient({ apiVersion: '2023-01-01' })
   const [category, setCategory] = useState('Photography')
+  const [eventAlbumId, setEventAlbumId] = useState('')
+  const [eventAlbums, setEventAlbums] = useState<{ _id: string; title: string }[]>([])
   const [isDragging, setIsDragging] = useState(false)
   const [uploads, setUploads] = useState<{ file: File; status: 'pending' | 'uploading' | 'complete' | 'error'; error?: string }[]>([])
 
   const categories = ['Photography', 'Videography', 'Cinematography', 'Event Media']
+
+  // Fetch event albums when category is Event Media
+  useEffect(() => {
+    if (category !== 'Event Media') {
+      setEventAlbumId('')
+      return
+    }
+
+    client
+      .fetch<{ _id: string; title: string }[]>(
+        `*[_type == "eventAlbum"] | order(title asc) { _id, title }`
+      )
+      .then((albums) => {
+        setEventAlbums(albums)
+        if (albums.length > 0 && !eventAlbumId) {
+          setEventAlbumId(albums[0]._id)
+        }
+      })
+      .catch(console.error)
+  }, [category, client])
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault()
@@ -42,22 +64,31 @@ export function BulkUploadTool() {
       try {
         const isVideo = item.file.type.startsWith('video/')
         const assetType = isVideo ? 'file' : 'image'
-        
+
         // 1. Upload the asset
         const asset = await client.assets.upload(assetType, item.file, {
           filename: item.file.name,
         })
-        
+
         // 2. Create the document
-        const documentPayload = {
+        const documentPayload: Record<string, unknown> = {
           _type: 'galleryItem',
-          title: '', // Empty by default
+          title: '',
           category: category,
           mediaType: isVideo ? 'video' : 'image',
-          ...(isVideo 
+          ...(isVideo
             ? { video: { _type: 'file', asset: { _type: 'reference', _ref: asset._id } } }
             : { image: { _type: 'image', asset: { _type: 'reference', _ref: asset._id } } })
         }
+
+        // Add event album reference for Event Media items
+        if (category === 'Event Media' && eventAlbumId) {
+          documentPayload.eventAlbum = {
+            _type: 'reference',
+            _ref: eventAlbumId,
+          }
+        }
+
         await client.create(documentPayload as any)
 
         setUploads(prev => prev.map(u => u.file === item.file ? { ...u, status: 'complete' } : u))
@@ -65,7 +96,7 @@ export function BulkUploadTool() {
         setUploads(prev => prev.map(u => u.file === item.file ? { ...u, status: 'error', error: err.message } : u))
       }
     }
-  }, [category, client])
+  }, [category, eventAlbumId, client])
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault()
@@ -85,6 +116,8 @@ export function BulkUploadTool() {
     }
   }, [processFiles])
 
+  const isUploadDisabled = category === 'Event Media' && !eventAlbumId
+
   return (
     <Container width={1} padding={4}>
       <Stack space={4}>
@@ -102,6 +135,21 @@ export function BulkUploadTool() {
               </Select>
             </Box>
 
+            {category === 'Event Media' && (
+              <Box>
+                <Text weight="semibold" size={1} style={{ marginBottom: '8px' }}>Event Album</Text>
+                {eventAlbums.length === 0 ? (
+                  <Text muted size={1}>No event albums found. Create one first in Event Albums.</Text>
+                ) : (
+                  <Select value={eventAlbumId} onChange={(e) => setEventAlbumId(e.currentTarget.value)}>
+                    {eventAlbums.map(album => (
+                      <option key={album._id} value={album._id}>{album.title}</option>
+                    ))}
+                  </Select>
+                )}
+              </Box>
+            )}
+
             <Card
               padding={5}
               radius={2}
@@ -112,16 +160,17 @@ export function BulkUploadTool() {
                 backgroundColor: isDragging ? 'var(--card-bg-color-hover)' : 'transparent',
                 transition: 'all 0.2s',
                 textAlign: 'center',
-                cursor: 'pointer'
+                cursor: isUploadDisabled ? 'not-allowed' : 'pointer',
+                opacity: isUploadDisabled ? 0.5 : 1,
               }}
-              onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
-              onDrop={handleDrop}
-              onClick={() => document.getElementById('file-upload')?.click()}
+              onDragOver={isUploadDisabled ? undefined : handleDragOver}
+              onDragLeave={isUploadDisabled ? undefined : handleDragLeave}
+              onDrop={isUploadDisabled ? undefined : handleDrop}
+              onClick={isUploadDisabled ? undefined : () => document.getElementById('file-upload')?.click()}
             >
               <Flex direction="column" align="center" style={{ gap: '12px' }}>
                 <Text size={4}><UploadIcon /></Text>
-                <Text>Drag and drop files here</Text>
+                <Text>{isUploadDisabled ? 'Select an event album first' : 'Drag and drop files here'}</Text>
                 <Text muted size={1}>or click to select files</Text>
                 <input
                   id="file-upload"
@@ -130,6 +179,7 @@ export function BulkUploadTool() {
                   accept="image/*,video/*"
                   style={{ display: 'none' }}
                   onChange={handleFileSelect}
+                  disabled={isUploadDisabled}
                 />
               </Flex>
             </Card>

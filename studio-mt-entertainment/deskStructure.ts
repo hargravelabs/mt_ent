@@ -40,14 +40,30 @@ export const myStructure = (S: StructureBuilder, context: any) =>
                 S,
                 context,
               }),
+            ])
+        ),
+      S.divider(),
+      S.listItem()
+        .title('Event Albums')
+        .child(
+          S.list()
+            .title('Event Albums')
+            .items([
               orderableDocumentListDeskItem({
-                type: 'galleryItem',
-                title: 'Event Media',
-                id: 'category-event-media',
-                filter: 'category == "Event Media"',
+                type: 'eventAlbum',
+                title: 'All Event Albums',
+                id: 'event-albums-list',
                 S,
                 context,
               }),
+              S.divider(),
+              S.listItem()
+                .title('Event Media Items')
+                .child(
+                  S.documentList()
+                    .title('Event Media Items')
+                    .filter('_type == "galleryItem" && category == "Event Media"')
+                ),
             ])
         ),
       S.divider(),
