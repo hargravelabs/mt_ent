@@ -43,6 +43,33 @@
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
+.lightbox-image-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    min-height: 120px;
+}
+
+.lightbox-spinner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.lightbox-image.lightbox-img-loading {
+    opacity: 0;
+}
+
+.lightbox-image.lightbox-img-loaded {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
 .lightbox-info {
     margin-top: 20px;
     display: flex;

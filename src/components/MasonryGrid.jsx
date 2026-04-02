@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { urlFor } from '../context/GalleryCacheContext';
 import { getYouTubeThumbnail, getYouTubeId } from '../lib/utils';
 import './MasonryGrid.css';
+import './MediaLoader.css';
 
 /* ─── Shared Lightbox Shell ─── */
 const LightboxShell = ({ onClose, isVideo, hasPrev, hasNext, onPrev, onNext, children }) => {
@@ -315,8 +316,32 @@ const YouTubeLightbox = ({ youtubeUrl }) => {
 
 /* ─── Photo Lightbox ─── */
 const PhotoLightbox = ({ src, alt }) => {
+    const [loaded, setLoaded] = useState(false);
+    const imgRef = useRef(null);
+
+    useEffect(() => {
+        setLoaded(false);
+        // Check if already cached
+        if (imgRef.current?.complete && imgRef.current.naturalHeight > 0) {
+            setLoaded(true);
+        }
+    }, [src]);
+
     return (
-        <img src={src} alt={alt || 'Expanded photo'} className="vlb-expanded-image" />
+        <div className="vlb-photo-wrapper">
+            {!loaded && (
+                <div className="vlb-photo-spinner">
+                    <div className="media-loader-spinner"></div>
+                </div>
+            )}
+            <img
+                ref={imgRef}
+                src={src}
+                alt={alt || 'Expanded photo'}
+                className={`vlb-expanded-image ${loaded ? 'vlb-img-loaded' : 'vlb-img-loading'}`}
+                onLoad={() => setLoaded(true)}
+            />
+        </div>
     );
 };
 
@@ -427,7 +452,7 @@ const LightboxContent = ({ data }) => {
     if (!data) return null;
     if (data.type === 'video') return <VideoLightbox src={data.src} poster={data.poster} />;
     if (data.type === 'youtube') return <YouTubeLightbox youtubeUrl={data.youtubeUrl} />;
-    if (data.type === 'photo') return <PhotoLightbox src={data.src} alt={data.alt} />;
+    if (data.type === 'photo') return <PhotoLightbox key={data.src} src={data.src} alt={data.alt} />;
     return null;
 };
 

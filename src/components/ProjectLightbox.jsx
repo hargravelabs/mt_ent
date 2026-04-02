@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { getYouTubeId } from '../lib/utils';
 import './ProjectLightbox.css';
+import './MediaLoader.css';
 
 const ProjectLightbox = ({ project, onClose }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [imageLoaded, setImageLoaded] = useState(false);
+    const imgRef = useRef(null);
 
     let items = [];
     if (project?.mediaType === 'video' && project?.video?.asset?.url) {
@@ -21,6 +24,18 @@ const ProjectLightbox = ({ project, onClose }) => {
     }
 
     const hasMultiple = items.length > 1;
+    const currentItem = items[currentIndex];
+
+    // Reset loading state when navigating to a new image
+    useEffect(() => {
+        if (currentItem?.type === 'image') {
+            setImageLoaded(false);
+            // Check if already cached
+            if (imgRef.current?.complete && imgRef.current.naturalHeight > 0) {
+                setImageLoaded(true);
+            }
+        }
+    }, [currentIndex, currentItem?.type]);
 
     // Handle ESC key to close
     useEffect(() => {
@@ -114,16 +129,27 @@ const ProjectLightbox = ({ project, onClose }) => {
                                     transition={{ duration: 0.3 }}
                                 />
                             ) : (
-                                <motion.img
+                                <motion.div
                                     key={currentIndex}
-                                    src={items[currentIndex]?.url}
-                                    alt={`${project.title} - ${currentIndex + 1}`}
-                                    className="lightbox-image"
+                                    className="lightbox-image-wrapper"
                                     initial={{ opacity: 0, x: 20 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     exit={{ opacity: 0, x: -20 }}
                                     transition={{ duration: 0.3 }}
-                                />
+                                >
+                                    {!imageLoaded && (
+                                        <div className="lightbox-spinner">
+                                            <div className="media-loader-spinner"></div>
+                                        </div>
+                                    )}
+                                    <img
+                                        ref={imgRef}
+                                        src={items[currentIndex]?.url}
+                                        alt={`${project.title} - ${currentIndex + 1}`}
+                                        className={`lightbox-image ${imageLoaded ? 'lightbox-img-loaded' : 'lightbox-img-loading'}`}
+                                        onLoad={() => setImageLoaded(true)}
+                                    />
+                                </motion.div>
                             )}
                         </AnimatePresence>
 

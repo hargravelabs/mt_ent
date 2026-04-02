@@ -317,12 +317,40 @@
     justify-content: center;
 }
 
+/* ─── Photo Lightbox with Spinner ─── */
+.vlb-photo-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    min-height: 120px;
+}
+
+.vlb-photo-spinner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
 .vlb-expanded-image {
     max-width: 90vw;
     max-height: 85vh;
     object-fit: contain;
     border-radius: 10px;
     display: block;
+    transition: opacity 0.3s ease;
+}
+
+.vlb-expanded-image.vlb-img-loading {
+    opacity: 0;
+}
+
+.vlb-expanded-image.vlb-img-loaded {
+    opacity: 1;
 }
 
 /* ─── Sanity Video Player (YouTube-style controls) ─── */
