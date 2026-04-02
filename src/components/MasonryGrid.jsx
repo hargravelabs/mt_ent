@@ -3,6 +3,25 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { urlFor } from '../context/GalleryCacheContext';
 import { getYouTubeThumbnail, getYouTubeId } from '../lib/utils';
 import './MasonryGrid.css';
+import './MediaLoader.css';
+
+/* ─── High-Quality Image Cache ─── */
+const hqImageCache = new Map(); // url -> HTMLImageElement (keeps decoded image in memory)
+
+const preloadImage = (url) => {
+    if (!url || hqImageCache.has(url)) return Promise.resolve();
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => { hqImageCache.set(url, img); resolve(); };
+        img.onerror = () => resolve(); // don't block on failure
+        img.src = url;
+    });
+};
+
+const getHqUrl = (imageSource) => {
+    if (!imageSource?.asset?.url) return null;
+    return urlFor(imageSource).width(2400).quality(85).auto('format').url();
+};
 
 /* ─── Shared Lightbox Shell ─── */
 const LightboxShell = ({ onClose, isVideo, hasPrev, hasNext, onPrev, onNext, children }) => {
@@ -314,9 +333,28 @@ const YouTubeLightbox = ({ youtubeUrl }) => {
 };
 
 /* ─── Photo Lightbox ─── */
-const PhotoLightbox = ({ src, alt }) => {
+const PhotoLightbox = ({ src, hqSrc, alt }) => {
+    const targetSrc = hqSrc || src;
+    const [loaded, setLoaded] = useState(hqSrc ? hqImageCache.has(hqSrc) : true);
+
+    useEffect(() => {
+        if (!hqSrc) { setLoaded(true); return; }
+        if (hqImageCache.has(hqSrc)) { setLoaded(true); return; }
+        setLoaded(false);
+        preloadImage(hqSrc).then(() => setLoaded(true));
+    }, [hqSrc]);
+
     return (
-        <img src={src} alt={alt || 'Expanded photo'} className="vlb-expanded-image" />
+        <div className="vlb-photo-wrapper">
+            {!loaded && (
+                <div className="vlb-photo-spinner-overlay">
+                    <div className="media-loader-spinner"></div>
+                </div>
+            )}
+            {loaded && (
+                <img src={targetSrc} alt={alt || 'Expanded photo'} className="vlb-expanded-image" />
+            )}
+        </div>
     );
 };
 
@@ -334,7 +372,8 @@ const getLightboxData = (item) => {
     } else if (isVideo && item.youtubeUrl) {
         return { type: 'youtube', youtubeUrl: item.youtubeUrl };
     } else if (optimizedImageUrl) {
-        return { type: 'photo', src: optimizedImageUrl, alt: item.title };
+        const hqSrc = getHqUrl(imageSource);
+        return { type: 'photo', src: optimizedImageUrl, hqSrc, alt: item.title };
     }
     return null;
 };
@@ -427,7 +466,7 @@ const LightboxContent = ({ data }) => {
     if (!data) return null;
     if (data.type === 'video') return <VideoLightbox src={data.src} poster={data.poster} />;
     if (data.type === 'youtube') return <YouTubeLightbox youtubeUrl={data.youtubeUrl} />;
-    if (data.type === 'photo') return <PhotoLightbox src={data.src} alt={data.alt} />;
+    if (data.type === 'photo') return <PhotoLightbox src={data.src} hqSrc={data.hqSrc} alt={data.alt} />;
     return null;
 };
 
@@ -529,6 +568,22 @@ const MasonryGrid = ({ items }) => {
 
     const currentData = openIndex !== null ? getLightboxData(items[openIndex]) : null;
     const isVideo = currentData && (currentData.type === 'video' || currentData.type === 'youtube');
+
+    // Preload HQ image for current + adjacent items
+    useEffect(() => {
+        if (openIndex === null) return;
+        const posIdx = expandableIndices.indexOf(openIndex);
+        const toPreload = [posIdx - 1, posIdx, posIdx + 1]
+            .filter(i => i >= 0 && i < expandableIndices.length)
+            .map(i => items[expandableIndices[i]])
+            .filter(Boolean);
+
+        toPreload.forEach(item => {
+            const imageSource = item.mediaType === 'video' ? item.videoThumbnail : item.image;
+            const hqUrl = getHqUrl(imageSource);
+            if (hqUrl) preloadImage(hqUrl);
+        });
+    }, [openIndex, expandableIndices, items]);
 
     // Find prev/next expandable indices
     const posInExpandable = openIndex !== null ? expandableIndices.indexOf(openIndex) : -1;
