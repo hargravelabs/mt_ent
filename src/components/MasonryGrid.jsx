@@ -9,10 +9,15 @@ const LightboxShell = ({ onClose, isVideo, hasPrev, hasNext, onPrev, onNext, chi
     const touchStartRef = useRef(null);
 
     useEffect(() => {
+        const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
         document.body.style.overflow = 'hidden';
+        if (scrollbarWidth > 0) {
+            document.body.style.paddingRight = `${scrollbarWidth}px`;
+        }
         if (isVideo) document.body.setAttribute('data-video-lightbox', '');
         return () => {
             document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
             document.body.removeAttribute('data-video-lightbox');
         };
     }, [isVideo]);
@@ -370,7 +375,6 @@ const MasonryGridItem = ({ item, index, onItemClick }) => {
     return (
         <motion.div
             className="masonry-item-wrapper"
-            layoutId={`project-${item._id}`}
             style={{ gridRowEnd: `span ${span}` }}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
