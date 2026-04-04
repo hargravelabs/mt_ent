@@ -211,7 +211,7 @@ function AppContent() {
         <div className="footer-spacer" style={{ height: '100vh', pointerEvents: 'none' }}></div>
       )}
 
-      <Footer />
+      {!isWorksPage && <Footer />}
     </>
   );
 }
